@@ -1,4 +1,5 @@
 import control.matlab as cmat
+import control
 import numpy as np
 import matplotlib.pyplot as plt
 from Cit_par import *
@@ -38,14 +39,17 @@ B_asym = [[0, ydr], [0,0], [lda,ldr], [nda,ndr]]
 C_asym = np.identity(4)
 D_asym = np.zeros((4,2))
 
-#state-space 
+
+#state-space  
+#output [1,2,3,4] = [beta, phi, p, r]
 T = np.linspace(0,100,1000)
-U = np.ones((1000,1))*(np.pi/180.)
-Uzeros = np.zeros((1000,1))
-Ua = np.concatenate((U,Uzeros),axis=1)
-Ur = np.concatenate((Uzeros,U),axis=1)
+#U = np.ones((1000,1))*(0.025)
+#Uzeros = np.zeros((1000,1))
+#Ua = np.concatenate((U,Uzeros),axis=1)
+#Ur = np.concatenate((Uzeros,U),axis=1)
 sys = cmat.ss(A_asym, B_asym, C_asym, D_asym)
-test1 = cmat.lsim(sys)
+#test1 = cmat.lsim(sys, T=T, U=Ur)
+test2 = control.impulse_response(sys, T=T, input = 0)
 
+plt.plot(T,np.transpose(test2[1]))
 
-print(test1)
