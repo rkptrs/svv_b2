@@ -61,17 +61,19 @@ D = np.array([[0],
 
 #Make State Space System
 T = np.linspace(0, 100, 1000)
-U = np.ones(1000)*(-0.00)
-X0 = [1, alpha0, th0, 0]
+U = np.ones(1000)*(0)
+X0 = [np.cos(alpha0), th0, 0, 0]
 
 sys = cmat.ss(A, B, C, D)
 
 #Make Output Vectors
 test = cmat.lsim(sys, T=T, U=U, X0=X0)
-out0 = [val[0] for val in test[0]]
-out1 = [val[1] for val in test[0]]
-out2 = [val[2] for val in test[0]]
-out3 = [val[3] for val in test[0]]
+out0 = np.asarray([val[0] for val in test[0]])
+out1 = np.asarray([val[1] for val in test[0]])
+out2 = np.asarray([val[2] for val in test[0]])
+out3 = np.asarray([val[3] for val in test[0]])
+
+V = (V0*out0) / np.cos(out1)
 
 print(np.linalg.eig(A)[0])
 plt.plot(T, out0)
