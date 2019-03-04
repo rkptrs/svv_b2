@@ -36,4 +36,3 @@ ndr = V/b*(Cldr*KXZ + Cndr*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
 A_asym = [[ybeta, yphi, yp, yr], [0, 0, 2*V/b, 0], [lbeta, lphi, lp, lr], [nbeta, nphi, np, nr]]
 B_asym = [[0, ydr], [0,0], [lda,ldr], [nda,ndr]]
 C_asym = np.identity(4)
-D_asym = np.zeros(2,4)
