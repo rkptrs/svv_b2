@@ -1,4 +1,4 @@
-import control
+import control.matlab as cmat
 import numpy as np
 import matplotlib.pyplot as plt
 from Cit_par import *
@@ -27,12 +27,25 @@ ldr = V/b*(Cldr*KZ2 + Cndr*KXZ)/(4*mub*(KX2*KZ2-KXZ**2))
 
 nbeta = V/b*(Clb*KXZ + Cnb*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
 nphi = 0
-np = V/b*(Clp*KXZ + Cnp*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
+n_p = V/b*(Clp*KXZ + Cnp*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
 nr = V/b*(Clr*KXZ + Cnr*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
 nda = V/b*(Clda*KXZ + Cnda*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
 ndr = V/b*(Cldr*KXZ + Cndr*KX2)/(4*mub*(KX2*KZ2-KXZ**2))
 
 #create state-space matrix
-A_asym = [[ybeta, yphi, yp, yr], [0, 0, 2*V/b, 0], [lbeta, lphi, lp, lr], [nbeta, nphi, np, nr]]
+A_asym = [[ybeta, yphi, yp, yr], [0, 0, 2*V/b, 0], [lbeta, lphi, lp, lr], [nbeta, nphi, n_p, nr]]
 B_asym = [[0, ydr], [0,0], [lda,ldr], [nda,ndr]]
 C_asym = np.identity(4)
+D_asym = np.zeros((4,2))
+
+#state-space 
+T = np.linspace(0,100,1000)
+U = np.ones((1000,1))*(np.pi/180.)
+Uzeros = np.zeros((1000,1))
+Ua = np.concatenate((U,Uzeros),axis=1)
+Ur = np.concatenate((Uzeros,U),axis=1)
+sys = cmat.ss(A_asym, B_asym, C_asym, D_asym)
+test1 = cmat.lsim(sys)
+
+
+print(test1)
