@@ -7,7 +7,7 @@ from math import *
 
 hp0    = 5000      # pressure altitude in the stationary flight condition [m]
 V0     = 100        # true airspeed in the stationary flight condition [m/sec]
-alpha0 = -2./180.*pi      # angle of attack in the stationary flight condition [rad]
+alpha0 = 2./180.*pi      # angle of attack in the stationary flight condition [rad]
 th0    = 2./180.*pi      # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
