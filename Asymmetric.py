@@ -7,8 +7,8 @@ from Cit_par import *
 
 
 #define initial paramaters
-CL = 0.5
-V = V0
+V = 100
+
 
 
 #define input variables for state matrices
@@ -39,17 +39,31 @@ B_asym = [[0, ydr], [0,0], [lda,ldr], [nda,ndr]]
 C_asym = np.identity(4)
 D_asym = np.zeros((4,2))
 
+#create C1 C2 C3
+C1 = [[(CYbdot-2*mub)*b/V, 0, 0, 0],[0, 1, 0, 0],[0, 0, -2*mub*KX2*b**2/V**2, 2*mub*KXZ*b**2/V**2],[Cnbdot*b/V, 0, 2*mub*KXZ*b**2/V**2, -2*mub*KZ2*b**2/V**2]]
+C2 = [[CYb, CL, CYp*b/(2*V), (CYr-4*mub)*b/(2*V)],[0, 0, -1, 0],[Clb, 0, Clp*b/(2*V), Clr*b/(2*V)], [Cnb, 0, Cnp*b/(2*V), Cnr*b/(2*V)]]
+C3 = [[CYda, CYdr], [0, 0], [Clda, Cldr],[Cnda, Cndr]]
+
+A_asym2 = np.matmul(-np.linalg.inv(C1),C2)
+B_asym2 = np.matmul(-np.linalg.inv(C1),C3)*0.025
+C_asym2 = np.identity(4)
+D_asym2 = np.zeros((4,2))
+
+
 
 #state-space  
 #output [1,2,3,4] = [beta, phi, p, r]
-T = np.linspace(0,100,1000)
+T = np.linspace(0,15,1000)
 #U = np.ones((1000,1))*(0.025)
 #Uzeros = np.zeros((1000,1))
 #Ua = np.concatenate((U,Uzeros),axis=1)
 #Ur = np.concatenate((Uzeros,U),axis=1)
-sys = cmat.ss(A_asym, B_asym, C_asym, D_asym)
-#test1 = cmat.lsim(sys, T=T, U=Ur)
-test2 = control.impulse_response(sys, T=T, input = 0)
+#sys = cmat.ss(A_asym, B_asym, C_asym, D_asym)
+sys2 = cmat.ss(A_asym2, B_asym2, C_asym2, D_asym2)
 
-plt.plot(T,np.transpose(test2[1]))
+#test1 = cmat.lsim(sys, T=T, U=Ur)
+test2 = control.impulse_response(sys2, T=T, input = 0)
+
+
+plt.plot(T,np.transpose(test2[1][0]))
 
