@@ -105,6 +105,6 @@ yout3 = yout[:,3]
 V = V0 * (yout0 / np.cos(yout1))
 
 print(np.linalg.eig(A)[0])
-plt.plot(T, V)
+plt.plot(T, yout1)
 plt.show()
 
