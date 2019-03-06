@@ -71,6 +71,8 @@ def calc_xcg(fuelused, cgshift): #input fuel used and cgshift = True for 3R forw
     
     xcg = inmetres(xcgdatum - 261.45) #cg position from LE MAC in metres
     
-    xcgperc = (xcg * 100) / inmetres(80.98) #cg position in %MAC in metres, MAC = 80.98"
+    xcgperc = (xcg * 100) / inmetres(80.98) #cg position in %MAC in metres, MAC = 80.98"   
     
     return xcgdatum, xcg, xcgperc
+    
+xcgdatum, xcg, xcgperc = calc_xcg(0, False)
