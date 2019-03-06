@@ -39,6 +39,7 @@ ih     = -2 * pi / 180   # stabiliser angle of incidence [rad]
 
 # Constant values concerning atmosphere and gravity
 
+p0     = 101325          # air pressure at sea level [Pa]
 rho0   = 1.2250          # air density at sea level [kg/m^3]
 Lambda = -0.0065         # temperature gradient in ISA [K/m]
 Temp0  = 288.15          # temperature at sea level in ISA [K]
