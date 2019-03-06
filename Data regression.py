@@ -1,7 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from math import *
 import os
-from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R
+from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R,A,e
 
 ##k=20
 ##x=np.arange(0,1.5,1/k)
@@ -83,5 +84,7 @@ plt.plot(CT,CN,'o')
 plt.plot(polyfitter(CN,CT,degree)[1],polyfitter(CN,CT,degree)[0])
 plt.show()
 
-print('lift drag polar', polyfitter(CN,CT,degree)[2])
+print('lift drag polar constants: Cd0,k,1/(Pi*A*e)', polyfitter(CN,CT,degree)[2])
 
+
+print(1/A/e/pi)
