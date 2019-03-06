@@ -1,6 +1,5 @@
 from Cit_par import *
 import numpy as np
-from math import *
 import control.matlab as cmat
 import matplotlib.pyplot as plt
 
@@ -12,6 +11,12 @@ import matplotlib.pyplot as plt
 
 # INPUT VECTOR
 # delta_e
+
+# OUTPUT VECTOR
+# u
+# alpha
+# theta
+# q
 
 # Parameters for Matrix C1
 C111 = -2 * muc * c
@@ -91,20 +96,21 @@ D = np.zeros((4,1))
 # Create State Space System
 sys = cmat.ss(A, B, C, D)
 
-T = np.linspace(0, 1000, 1000)
-X0 = [np.cos(alpha0), alpha0, th0, 0]
-U = np.ones(1000) * 0.
+T = np.linspace(0, 150, 1000)
+X0 = [V0*np.cos(alpha0), alpha0, th0, 0]
+U = np.hstack((np.ones(100) * 0.005, np.zeros(900)))
 
 # Make Output Plots
-yout, T, xout = cmat.lsim(sys, T=T, X0=X0, U=U)
+yout, T, xout = cmat.lsim(sys, U=U, T=T, X0=X0)
 yout0 = yout[:,0]
 yout1 = yout[:,1]
 yout2 = yout[:,2]
 yout3 = yout[:,3]
 
-V = V0 * (yout0 / np.cos(yout1))
+V = (yout0 / np.cos(yout1))
 
 print(np.linalg.eig(A)[0])
-plt.plot(T, yout1)
+#plt.scatter(np.real(np.linalg.eig(A)[0]), np.imag(np.linalg.eig(A)[0]))
+plt.plot(T, V)
 plt.show()
 
