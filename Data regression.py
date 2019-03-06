@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
+import os
 from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R
 
 ##k=20
@@ -66,6 +67,8 @@ degree=1
 data=np.stack((h,M,Tdiff,FFl,FFr)).T
 np.savetxt('matlab.dat',data,delimiter=' ')
 
+
+os.spawnl(0,"thrust(1).exe",'args')
 
 T = np.loadtxt( 'thrust.dat' )
 D=np.array([])
