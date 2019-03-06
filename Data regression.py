@@ -15,7 +15,7 @@ def polyfitter(x1,y1,degree):
     y=0
     i=0
     step=(max(x1)-min(x1))/2/len(x1)
-    x=np.arange(min(x1)-3,max(x1)+step,step)
+    x=np.arange(min(x1),max(x1)+step,step)
     for cff in coefficients:
         y+=cff*x**i
         i+=1
@@ -57,11 +57,28 @@ CN=Wmom/(0.5*rho0*V**2*S)
 
 degree=1
 
-plt.plot(alpha,CN,'o')
-plt.plot(polyfitter(alpha,CN,degree)[0],polyfitter(alpha,CN,degree)[1])
+#plt.plot(alpha,CN,'o')
+#plt.plot(polyfitter(alpha,CN,degree)[0],polyfitter(alpha,CN,degree)[1])
 #plt.show()
 
 #print(polyfitter(alpha,CN,degree)[2])
 
 data=np.stack((h,M,Tdiff,FFl,FFr)).T
 np.savetxt('matlab.dat',data,delimiter=' ')
+
+
+T = np.loadtxt( 'thrust.dat' )
+D=np.array([])
+for line in T:
+    D=np.append(D,sum(line))
+
+
+CT=D/(0.5*rho0*V**2*S)
+
+degree=2
+plt.plot(CT,CN,'o')
+plt.plot(polyfitter(CN,CT,degree)[1],polyfitter(CN,CT,degree)[0])
+plt.show()
+
+print('lift drag polar', polyfitter(CN,CT,degree)[2])
+
