@@ -6,9 +6,9 @@ from math import *
 # Stationary flight condition
 
 hp0    = 0      # pressure altitude in the stationary flight condition [m]
-V0     = 100        # true airspeed in the stationary flight condition [m/sec]
-alpha0 = 0.00023      # angle of attack in the stationary flight condition [rad]
-th0    = 0.00023      # pitch angle in the stationary flight condition [rad]
+V0     = 200        # true airspeed in the stationary flight condition [m/sec]
+alpha0 = 0.00      # angle of attack in the stationary flight condition [rad]
+th0    = 0.00      # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
 m      = 5000         # mass [kg]
@@ -45,6 +45,7 @@ Lambda = -0.0065         # temperature gradient in ISA [K/m]
 Temp0  = 288.15          # temperature at sea level in ISA [K]
 R      = 287.05          # specific gas constant [m^2/sec^2K]
 g      = 9.81            # [m/sec^2] (gravity constant)
+Gamma  = 1.4             # ratio of specific heats
 
 # air density [kg/m^3]  
 rho    = rho0 * pow( ((1+(Lambda * hp0 / Temp0))), (-((g / (Lambda*R)) + 1)))   
