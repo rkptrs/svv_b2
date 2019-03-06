@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib.pyplot as plt
-from Cit_par import rho0,S,gamma,Lambda,Temp0,p0,g,R
+from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R
 
 ##k=20
 ##x=np.arange(0,1.5,1/k)
@@ -40,14 +40,15 @@ V=0.51444*V
 TAT=273.15+TAT
 Wf=4.44822*Wf
 Winit=4.44822*Winit # newtons
-
+FFl=0.000125998*FFl # kg/s
+FFr=0.000125998*FFr # kg/s
 
 Wmom=Winit-Wf
 
 pmom=p0*(1+Lambda*h/Temp0)**(-g/Lambda/R)
 
-M=(2/(gamma-1)*((1+p0/pmom*((1+(gamma-1)/2/gamma*rho0/p0*V**2)**(gamma/(gamma-1))-1))**((gamma-1)/gamma)-1))**0.5
-Tmom=TAT/(1+(gamma-1)/2*M**2)
+M=(2/(Gamma-1)*((1+p0/pmom*((1+(Gamma-1)/2/Gamma*rho0/p0*V**2)**(Gamma/(Gamma-1))-1))**((Gamma-1)/Gamma)-1))**0.5
+Tmom=TAT/(1+(Gamma-1)/2*M**2)
 TmomISA=Temp0+Lambda*hmeters
 
 Tdiff=Tmom-TmomISA
