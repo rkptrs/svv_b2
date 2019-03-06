@@ -39,12 +39,12 @@ def sumall(payload, empty, fuel):
     
     return total
     
-def givexcg(summasses, summoments): #calculates xcg from datum based on all masses and moments
+def givexcg(summasses, summoments): #calculates xcgdatum from datum based on all masses and moments
     xcg = summoments / summasses #result is in inches
     
     return xcg
     
-def calc_xcg(fuelused, cgshift): #input fuel used and cgshift = True for 3R forward or cgshift = False for unshifted passenger cog, returns xcg in inches from datum line
+def calc_xcg(fuelused, cgshift): #input fuel used and cgshift = True for 3R forward or cgshift = False for unshifted passenger cog, returns xcg in inches from datum line, xcg from LE MAC in m and xcg as percentage MAC
     payloadmassesinkg = np.array([89, 92, 85, 80, 68, 76, 59, 76, 69, 77, 0, 0, 0]) #In order of Pilot 1, Pilot 2, Coordinator 1, Coordinator 2, 1L, 1R, 2L, 2R, 3L, 3R, nosebaggage, aftbaggage1, aftbaggage2
     payloadmassesinlbs = inpounds(payloadmassesinkg)
 
@@ -74,7 +74,3 @@ def calc_xcg(fuelused, cgshift): #input fuel used and cgshift = True for 3R forw
     xcgperc = (xcg * 100) / inmetres(80.98) #cg position in %MAC in metres, MAC = 80.98"
     
     return xcgdatum, xcg, xcgperc
-    
-xcgdatum, xcg, xcgperc = calc_xcg(393, False)
-
-print xcgdatum, xcg, xcgperc
