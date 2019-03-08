@@ -7,16 +7,8 @@ import scipy.stats
 from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R,A,e
 
 CNalpha=False
-CN_CT=False
-elevatortrimcurve=True
-
-##k=20
-##x=np.arange(0,1.5,1/k)
-##degree=3 # between 1 and 5
-##x1 = x
-##y1 = x1 - 2 * (x1 ** 2) + 0.5 * (x1 ** 3)
-
-
+CN_CT=True
+elevatortrimcurve=False
 
 def polyfitter(x1,y1,degree):
     outlierchecks=5
@@ -69,7 +61,7 @@ Winit=14064.765428 #lbs
 alpha=np.array([1.4,2.1,3.3,4.9,6.6,10.3]) #degree
 
 #stationairy elevator trim
-alpha=np.array([5.3,6.3,7.3,8.5,4.5,4.1,3.4]) #degree
+alphae=np.array([5.3,6.3,7.3,8.5,4.5,4.1,3.4]) #degree
 de=np.array([0,-0.4,0.9,-1.5,0.4,0.6,1.0]) #degree
 
 
@@ -91,8 +83,12 @@ Tmom=TAT/(1+(Gamma-1)/2*M**2)
 TmomISA=Temp0+Lambda*hmeters
 
 Tdiff=Tmom-TmomISA
+Vt=(Gamma*R*TmomISA)**0.5*M
+rhomom=pmom/R/TmomISA
+Ve=Vt*(rhomom/rho0)**0.5
 
-CN=Wmom/(0.5*rho0*V**2*S)
+
+CN=Wmom/(0.5*rho0*Ve**2*S)
 data=np.stack((h,M,Tdiff,FFl,FFr)).T
 np.savetxt('matlab.dat',data,delimiter=' ')
 
@@ -105,10 +101,11 @@ for line in T:
     D=np.append(D,sum(line))
 
 
-CT=D/(0.5*rho0*V**2*S)
+CT=D/(0.5*rho0*Ve**2*S)
 
-degree=1
+
 if CNalpha:
+    degree=1
     polyfits=polyfitter(alpha,CN,degree)
     plt.plot(polyfits[0],polyfits[1],'o')
     plt.plot(polyfits[2],polyfits[3])
@@ -118,16 +115,16 @@ if CNalpha:
 
 
 if CN_CT:
-    polyfits=polyfitter(CN,CT,degree)
     degree=2
+    polyfits=polyfitter(CN,CT,degree)
     plt.plot(polyfits[1],polyfits[0],'o')
-    plt.plot(polyfits[2],polyfits[3])
+    plt.plot(polyfits[3],polyfits[2])
 
     print('lift drag polar constants: Cd0,k,1/(Pi*A*e)', polyfits[4])
     print(1/A/e/pi)
 
 if elevatortrimcurve:
-    polyfits=polyfitter(alpha,de,degree)
+    polyfits=polyfitter(alphae,de,degree)
     degree=1
     plt.plot(polyfits[0],polyfits[1],'o')
     plt.plot(polyfits[2],polyfits[3])
