@@ -5,13 +5,13 @@ from math import *
 
 # Stationary flight condition
 
-hp0    = 0      # pressure altitude in the stationary flight condition [m]
+hp0    = 3000      # pressure altitude in the stationary flight condition [m]
 V0     = 60        # true airspeed in the stationary flight condition [m/sec]
-alpha0 = 0.005      # angle of attack in the stationary flight condition [rad]
-th0    = 0.005      # pitch angle in the stationary flight condition [rad]
+alpha0 = 0         # angle of attack in the stationary flight condition [rad]
+th0    = 0.03      # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      = 5000         # mass [kg]
+m      = 4000         # mass [kg]
 
 # aerodynamic properties
 e      = 0.8    # Oswald factor [ ]
