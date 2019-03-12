@@ -67,12 +67,10 @@ def calc_xcg(fuelused, cgshift): #input fuel used and cgshift = True for 3R forw
     summasses = sumall(sumpayloadmass, emptymassinlbs, currentfuel) #sum all weights in lbs
     summoments = sumall(sumpayloadmoment, emptymassmoment, currentfuelmoment) #sum all moments in inchlbs
 
-    xcgdatum = givexcg(summasses, summoments) #in lbs, should lie between 276.10" and 285.80"
+    xcgdatum = givexcg(summasses, summoments) #in inches, should lie between 276.10" and 285.80"
     
     xcg = inmetres(xcgdatum - 261.45) #cg position from LE MAC in metres
     
     xcgperc = (xcg * 100) / inmetres(80.98) #cg position in %MAC in metres, MAC = 80.98"   
     
     return xcgdatum, xcg, xcgperc
-    
-xcgdatum, xcg, xcgperc = calc_xcg(0, False)
