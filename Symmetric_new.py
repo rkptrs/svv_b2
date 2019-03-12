@@ -15,7 +15,7 @@ import matplotlib.pyplot as plt
 
 # Parameters for Matrix C1
 C111 = -2 * muc * c
-C112 = 1
+C112 = 0
 C113 = 0
 C114 = 0
 
