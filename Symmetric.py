@@ -1,80 +1,115 @@
 from Cit_par import *
 import numpy as np
-from math import *
 import control.matlab as cmat
 import matplotlib.pyplot as plt
 
 # STATE VECTOR
-# uhat
+# u
 # alpha
 # theta
-# qcbar/V
+# q
 
 # INPUT VECTOR
 # delta_e
 
-# Parameters for Matrix A
-xu = (V0/c) * (CXu / (2*muc))
-xalpha = (V0/c) * (CXa / (2*muc))
-xtheta = (V0/c) * (CZ0 / (2*muc))
-xq = (V0/c) * (CXq / (2*muc))
+# OUTPUT VECTOR
+# u
+# alpha
+# theta
+# q
 
-zu = (V0/c) * (CZu / (2*muc-CZadot))
-zalpha = (V0/c) * (CZa / (2*muc-CZadot))
-ztheta = -(V0/c) * (CX0 / (2*muc-CZadot))
-zq = (V0/c) * ((2*muc+CZq) / (2*muc-CZadot))
+# Parameters for Matrix C1
+C111 = -2 * (c/V0**2) * muc 
+C112 = 0
+C113 = 0
+C114 = 0
 
-mu = (V0/c) * ((Cmu + CZu * (Cmadot/(2*muc-CZadot))) / (2*muc*KY2))
-malpha = (V0/c) * ((Cma + CZa * (Cmadot/(2*muc-CZadot))) / (2*muc*KY2))
-mtheta = -(V0/c) * ((CX0 * (Cmadot/(2*muc-CZadot))) / (2*muc*KY2))
-mq = (V0/c) * ((Cmq + Cmadot * ((2*muc+CZq)/(2*muc-CZadot))) / (2*muc*KY2))
+C121 = 0
+C122 = (c/V0) * (CZadot - 2*muc)
+C123 = 0
+C124 = 0
 
-# Parameters for Matrix B
-xde = (V0/c) * (CXde / (2*muc))
-zde = (V0/c) * (CZde / (2*muc-CZadot))
-mde = (V0/c) * ((Cmde + CZde * (Cmadot/(2*muc-CZadot))) / (2*muc*KY2))
+C131 = 0
+C132 = 0
+C133 = -1
+C134 = 0
+
+C141 = 0
+C142 = (c/V0) * Cmadot
+C143 = 0
+C144 = -2 * muc * KY2 * (c**2/V0**2)
+
+C1 = np.matrix([[C111, C112, C113, C114],
+                [C121, C122, C123, C124],
+                [C131, C132, C133, C134],
+                [C141, C142, C143, C144]])
+
+# Parameters for Matrix C2
+C211 = (1/V0) * CXu
+C212 = CXa
+C213 = CZ0
+C214 = (c/V0) * CXq
+
+C221 = (1/V0) * CZu
+C222 = CZa
+C223 = - CX0
+C224 = (c/V0) * (CZq + 2*muc)
+
+C231 = 0
+C232 = 0
+C233 = 0
+C234 = 1
+
+C241 = (1/V0) * Cmu
+C242 = Cma
+C243 = 0
+C244 = (c/V0) * Cmq
+
+C2 = np.matrix([[C211, C212, C213, C214],
+                [C221, C222, C223, C224],
+                [C231, C232, C233, C234],
+                [C241, C242, C243, C244]])
+
+# Parameters for Matrix C3
+C311 = CXde
+C321 = CZde
+C331 = 0
+C341 = Cmde
+
+C3 = np.matrix([[C311],
+                [C321],
+                [C331],
+                [C341]])
 
 # Matrix A
-A = np.array([[xu, xalpha, xtheta, xq],
-              [zu, zalpha, ztheta, zq],
-              [0, 0, 0, V0/c],
-              [mu, malpha, mtheta, mq]])
+As = - np.matmul(np.linalg.inv(C1), C2)
 
 # Matrix B
-B = np.array([[xde],
-              [zde],
-              [0],
-              [mde]])
+Bs = - np.matmul(np.linalg.inv(C1), C3)
 
 # Matrix C
-C = np.array([[1, 0, 0, 0],
-              [0, 1, 0, 0],
-              [0, 0, 1, 0],
-              [0, 0, 0, 1]])
+Cs = np.identity(4)
 
-#Matrix D
-D = np.array([[0],
-              [0],
-              [0],
-              [0]])
+# Matrix D
+Ds = np.zeros((4,1))
 
+# Create State Space System
+sys = cmat.ss(As, Bs, Cs, Ds)
 
-#Make State Space System
-T = np.linspace(0, 100, 1000)
-U = np.ones(1000)*(0)
-X0 = [np.cos(alpha0), th0, 0, 0]
+T = np.arange(0, 150.1, 0.1)
+X0 = [0, 0, 0, 0]
+U = np.ones(len(T))*-0.005
 
-sys = cmat.ss(A, B, C, D)
+# Generate Outputs
+yout, T, xout = cmat.lsim(sys, U=U, T=T, X0=X0)
 
-#Make Output Vectors
-test = cmat.lsim(sys, T=T, U=U, X0=X0)
-out0 = np.asarray([val[0] for val in test[0]])
-out1 = np.asarray([val[1] for val in test[0]])
-out2 = np.asarray([val[2] for val in test[0]])
-out3 = np.asarray([val[3] for val in test[0]])
-
-V = (V0*out0) / np.cos(out1)
-
-print(np.linalg.eig(A)[0])
-plt.plot(T, out0)
+u = yout[:,0]
+alpha = yout[:,1]
+theta = yout[:,2]
+q = yout[:,3]
+V = V0 + u
+# Print Eigenvalues and Plot Graphs
+plt.plot(T, V)
+plt.xlim([T[0], T[-1]])
 plt.show()
+
