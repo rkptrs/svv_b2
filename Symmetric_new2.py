@@ -1,4 +1,4 @@
-from Cit_par_test import *
+from Cit_par import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
@@ -109,6 +109,6 @@ theta = yout[:,2]
 q = yout[:,3]
 
 # Print Eigenvalues and Plot Graphs
-plt.plot(T, alpha)
+plt.plot(T, u)
 plt.show()
 
