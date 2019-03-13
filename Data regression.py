@@ -257,7 +257,7 @@ if CNalpha:
     degree=1
     polyfits=polyfitter(a1,CN1,degree)
     plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
-    plt.plot(polyfits[2],polyfits[3],label='Linear approximation $C_{L_0}$='+str(round(polyfits[4][0],4))+' [-]'+'  $C_{L_α}$='+str(round(polyfits[4][1],4))+' [$°^{-1}$]')
+    plt.plot(polyfits[2],polyfits[3],label='Linear approximation $C_{L_0}$='+str(round(polyfits[4][0],4))+' [-],'+'  $C_{L_α}$='+str(round(polyfits[4][1],4))+' [$°^{-1}$]')
     plt.plot(np.empty(0),np.empty(0),' ',label='Mach number range: '+str(round(min(M1),2))+', '+str(round(max(M1),2)))
     plt.plot(np.empty(0),np.empty(0),' ',label='Reynolds number range: '+str(round(min(Re1/10**6),1))+'*$10^6$'+', '+str(round(max(Re1/10**6),1))+'*$10^6$')
     plt.title('Lift curve',fontsize=24)
@@ -321,7 +321,7 @@ if FeVe:
     degree=2
     polyfits=polyfitter(Vetildetrim,Fetrim,degree)
     plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
-    plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $F_e^\star$='+str(round(polyfits[4][0],4))+' '+str(round(polyfits[4][1],4))+'*$\~V_e$ +'+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [N]')
+    plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $F_e^\star$='+str(round(polyfits[4][0],4))+' +'+str(round(polyfits[4][1],4))+'*$\~V_e$ +'+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [N]')
     plt.gca().invert_yaxis()
     plt.title('Elevator control force curve',fontsize=24)
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
