@@ -10,7 +10,16 @@ import xlrd
 
 CNalpha=False
 CN_CT=False
-elevatortrimcurve=True
+elevatortrimcurvea=False
+elevatortrimcurvev=False
+FeVe=False
+
+
+#CNalpha=True
+#CN_CT=True
+#elevatortrimcurvea=True
+#elevatortrimcurvev=True
+FeVe=True
 
 def polyfitter(x1,y1,degree):
     outlierchecks=5
@@ -72,6 +81,21 @@ for i in range(6):####change to 7 for real data
     Fused1=np.append(Fused1,float(sheet.col(8)[27+i].value)*4.44822)    #Newtons
     TAT1=np.append(TAT1,float(sheet.col(9)[27+i].value)+273.15)         #Kelvin
 
+
+# fix thrust.exe singularity at 5th line
+hp1[4]=hp1[4]*1.01
+#IAS1[4]=IAS1[4]*1.01
+#a1[4]=a1[4]*1.01
+#FFl1[4]=FFl1[4]*1.01
+#FFr1[4]=FFr1[4]*1.01
+#Fused1[4]=Fused1[4]*1.01
+#TAT1[4]=TAT1[4]*1.01
+
+
+
+
+
+
 hptrim=np.array([])
 IAStrim=np.array([])
 atrim=np.array([])
@@ -121,7 +145,7 @@ for i in range(2):
 Winit=14064.765428 #lbs
 Winit=4.44822*Winit # newtons
 Ws=60500 # newtons
-
+CmTc=-0.0064
 
 
 
@@ -153,51 +177,107 @@ def conversions(hp,V,alpha,FFl,FFr,Wf,TAT):
     for line in T:
         D=np.append(D,sum(line))
 
-
     CT=D/(0.5*rho0*Ve**2*S)
 
+    #standard thrust
+    FFls=FFrs=np.full(len(hp),0.048)
+    data=np.stack((hp,M,Tdiff,FFls,FFrs)).T
+    np.savetxt('matlab.dat',data,delimiter=' ')
 
-    return Ve,CN,CT,Wmom,rhomom,Tmom
+    os.spawnl(0,"thrust(1).exe",'args')
 
-#Ve1,CN1,CT1,Wmom1,rhomom1,Tmom1=conversions(hp1,IAS1,a1,FFl1,FFr1,Fused1,TAT1)
-Vetrim,CNtrim,CTtrim,Wmomtrim,rhomomtrim,Tmomtrim=conversions(hptrim,IAStrim,atrim,FFltrim,FFrtrim,Fusedtrim,TATtrim)
-Vecg,CNcg,CTcg,Wmomcg,rhomomcg,Tmomcg=conversions(hpcg,IAScg,acg,FFlcg,FFrcg,Fusedcg,TATcg)
+    T = np.loadtxt( 'thrust.dat' )
+    D=np.array([])
+    for line in T:
+        Ds=np.append(D,sum(line))
+    CTs=Ds/(0.5*rho0*Ve**2*S)
 
-#deeqstar=de-CmTc/Cmdelta(TCs-Tc)
+    return Ve,Vetilde,CN,CT,CTs,Wmom,rhomom,Tmom
+
+
+Ve1,Vetilde1,CN1,CT1,CTs1,Wmom1,rhomom1,Tmom1=conversions(hp1,IAS1,a1,FFl1,FFr1,Fused1,TAT1)
+Vetrim,Vetildetrim,CNtrim,CTtrim,CTstrim,Wmomtrim,rhomomtrim,Tmomtrim=conversions(hptrim,IAStrim,atrim,FFltrim,FFrtrim,Fusedtrim,TATtrim)
+Vecg,Vetildecg,CNcg,CTcg,CTscg,Wmomcg,rhomomcg,Tmomcg=conversions(hpcg,IAScg,acg,FFlcg,FFrcg,Fusedcg,TATcg)
+
+
+
 
 deltacg=0.0254*(CGC.calc_xcg(Fusedcg[1]/4.44822,True)[0]-CGC.calc_xcg(Fusedcg[0]/4.44822,False)[0])
 
-Cmdelta=-(decg[1]-decg[0])*180/pi*np.average(CNcg)*deltacg/c
+Cmdelta=-1/((decg[1]-decg[0])/180*pi)*np.average(CNcg)*deltacg/c
+
+TC=CNtrim
+TCs=CTstrim
+
+deeqstar=detrim-CmTc/Cmdelta*(TCs-TC)
 
 
 if CNalpha:
     degree=1
     polyfits=polyfitter(a1,CN1,degree)
-    plt.plot(polyfits[0],polyfits[1],'o')
-    plt.plot(polyfits[2],polyfits[3])
+    plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
+    plt.plot(polyfits[2],polyfits[3],label='Linear approximation $C_{L_0}$='+str(round(polyfits[4][0],4))+' [-]'+'  $C_{L_α}$='+str(round(polyfits[4][1],4))+' [$°^{-1}$]')
+    plt.title('Lift curve',fontsize=24)
+    plt.xlabel('α [°]',fontsize=20)
+    plt.ylabel('$C_L$ [-]',fontsize=20)
+    plt.legend(loc=8)
 
-    print(polyfits[4])
+    
 
 
 
 if CN_CT:
     degree=2
     polyfits=polyfitter(CN1,CT1,degree)
-    plt.plot(polyfits[1],polyfits[0],'o')
-    plt.plot(polyfits[3],polyfits[2])
+    plt.plot(polyfits[1],polyfits[0],'o',label='Data points')
+    plt.plot(polyfits[3],polyfits[2],label='Polynomial approximation $C_D$= '+str(round(polyfits[4][0],4))+' '+str(round(polyfits[4][1],4))+'*$C_L$ +'+str(round(polyfits[4][2],4))+'*$C_L^2$'+' [-]')
+    plt.title('Drag polar',fontsize=24)
+    plt.xlabel('$C_L$ [-]',fontsize=20)
+    plt.ylabel('$C_D$ [-]',fontsize=20)
+    plt.legend(loc=8)
 
     print('lift drag polar constants: Cd0,k,1/(Pi*A*e)', polyfits[4])
     print(1/A/e/pi)
 
-if elevatortrimcurve:
+if elevatortrimcurvea:
     degree=1
     polyfits=polyfitter(atrim,detrim,degree)
-    plt.plot(polyfits[0],polyfits[1],'o')
-    plt.plot(polyfits[2],polyfits[3])
+    plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
+    plt.plot(polyfits[2],polyfits[3],label='Linear approximation '+r'$\frac{dδ_e}{dα}$= '+str(round(polyfits[4][1],4))+' [-]')
     plt.gca().invert_yaxis()
     print ('-Cmalpha/Cmdelta=',polyfits[4][1])
     Cmalpha=polyfits[4][1]*-Cmdelta
     print ('Cmalpha=',Cmalpha)
+    plt.title('Elevator trim curve',fontsize=24)
+    plt.xlabel('α [°]',fontsize=20)
+    plt.ylabel('$δ_e$ [°]',fontsize=20)
+    plt.legend(loc=8)
+
+if elevatortrimcurvev:
+    degree=2
+    polyfits=polyfitter(Vetildetrim,deeqstar,degree)
+    plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
+    plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $δ_{e_{eq}}^\star= $'+str(round(polyfits[4][0],4))+' +'+str(round(polyfits[4][1],4))+'*$\~V_e$ '+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [°]')
+    plt.gca().invert_yaxis()
+    plt.title('Elevator trim curve',fontsize=24)
+    plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
+    plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
+    plt.legend(loc=8)
+
+if FeVe:
+    degree=2
+    polyfits=polyfitter(Vetildetrim,Fetrim,degree)
+    plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
+    plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $F_e^\star$='+str(round(polyfits[4][0],4))+' '+str(round(polyfits[4][1],4))+'*$\~V_e$ +'+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [N]')
+    plt.gca().invert_yaxis()
+    plt.title('Elevator control force curve',fontsize=24)
+    plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
+    plt.ylabel('$F_e^\star$ [N]',fontsize=20)
+    plt.legend(loc=8)
+
+
+
+plt.grid()
 plt.show()
 
 
