@@ -2,6 +2,11 @@ from Cit_par import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
+import sys
+
+sys.path.append('../')
+
+from FlightData.Plotting import *
 
 # STATE VECTOR
 # u

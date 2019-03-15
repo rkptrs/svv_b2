@@ -76,8 +76,8 @@ def givedata(choosedemo, chooseparam, plotting): #function that will return flig
     #Finding desired time
     starttimeindex = np.where(time == starttime)
     endtimeindex = np.where(time == endtime)
-    
-    chosentime = time[starttimeindex[0]:endtimeindex[0]] #time array for chosen manoeuvre, 0 is necessary due to nature of output of np.where as an array
+
+    chosentime = time[starttimeindex[0][0]:endtimeindex[0][0]] #time array for chosen manoeuvre, 0 is necessary due to nature of output of np.where as an array
     
     #filtering chosen parameters by time span
     outputdata = np.zeros((len(chosentime),len(chooseparam)))
@@ -86,7 +86,7 @@ def givedata(choosedemo, chooseparam, plotting): #function that will return flig
     for parameter in chooseparam:
         data = eval(parameter)
         
-        outputdata[:,i] = data[starttimeindex[0]:endtimeindex[0]] #0 is necessary due to nature of output of np.where as an array
+        outputdata[:,i] = data[starttimeindex[0][0]:endtimeindex[0][0]] #0 is necessary due to nature of output of np.where as an array
         
         #building parameter legend labels from chooseparam
         paramindex = variables.index(parameter)
@@ -99,7 +99,7 @@ def givedata(choosedemo, chooseparam, plotting): #function that will return flig
         
     return chosentime, outputdata
 
-data = givedata('Phugoid', ['aoa','pitchangle','pitchrate','tas'], True)
+time, data = givedata('Phugoid', ['aoa','pitchangle','pitchrate','tas'], True)
 
 """ Putting lines into the full time-scale plots
 #adding timestamps of series 1 in black
