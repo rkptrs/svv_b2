@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from scipy.optimize import curve_fit
 from math import *
 import os
 import scipy
 import scipy.stats
-from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R,A,e,c
+from Cit_par import rho0,S,Gamma,Lambda,Temp0,p0,g,R,A,e,c,CD0
 import CGCalculations as CGC
 import xlrd
 
@@ -15,11 +16,11 @@ elevatortrimcurvev=False
 FeVe=False
 
 
-#CNalpha=True
+CNalpha=True
 #CN_CT=True
 #elevatortrimcurvea=True
 #elevatortrimcurvev=True
-FeVe=True
+#FeVe=True
 
 def polyfitter(x1,y1,degree):
     outlierchecks=5
@@ -59,8 +60,43 @@ def polyfitter(x1,y1,degree):
         i+=1
     return x1,y1,x,y,coefficients
 
+def polyfitter2(x1,y1):
+    
+    def func(x, a, c):
+        return a+c*x**2
 
-workbook = xlrd.open_workbook('REFERENCE_Post_Flight_Datasheet_Flight.xlsx')
+    outlierchecks=5
+    coeff,cov=curve_fit(func,x1,y1)
+    y=0
+    i=0
+    step=(max(x1)-min(x1))/2/len(x1)
+    x=np.arange(min(x1),max(x1)+step,step)
+    y=func(x,coeff[0],coeff[1])
+
+
+    for j in range(outlierchecks):
+        ycheck=func(x1,coeff[0],coeff[1])
+        i=0
+        e=y1-ycheck
+        threshold=2
+        deleters=np.array([])
+        for i in range(len(e)):
+            if abs(scipy.stats.zscore(e)[i])>threshold:
+                x1=np.delete(x1,i)
+                y1=np.delete(y1,i)
+                print ('oulier:',i)
+                break
+    
+    coeff,cov=curve_fit(func,x1,y1)
+    y=0
+    i=0
+    step=(max(x1)-min(x1))/2/len(x1)
+    x=np.arange(min(x1),max(x1)+step,step)
+    y=func(x,coeff[0],coeff[1])
+    return x1,y1,x,y,coeff
+
+
+workbook = xlrd.open_workbook('Post_Flight_Datasheet.xlsx')
 
 sheet = workbook.sheet_by_name('Sheet1')
 
@@ -83,7 +119,7 @@ for i in range(6):####change to 7 for real data
 
 
 # fix thrust.exe singularity at 5th line
-hp1[4]=hp1[4]*1.01
+#hp1[4]=hp1[4]*1.01
 #IAS1[4]=IAS1[4]*1.01
 #a1[4]=a1[4]*1.01
 #FFl1[4]=FFl1[4]*1.01
@@ -146,6 +182,7 @@ Winit=14064.765428 #lbs
 Winit=4.44822*Winit # newtons
 Ws=60500 # newtons
 CmTc=-0.0064
+nu=1.47*10**-5
 
 
 
@@ -191,13 +228,14 @@ def conversions(hp,V,alpha,FFl,FFr,Wf,TAT):
     for line in T:
         Ds=np.append(D,sum(line))
     CTs=Ds/(0.5*rho0*Ve**2*S)
+    Re=Vt*c/nu
 
-    return Ve,Vetilde,CN,CT,CTs,Wmom,rhomom,Tmom
+    return Ve,Vetilde,CN,CT,CTs,Wmom,rhomom,Tmom,M,Re
 
 
-Ve1,Vetilde1,CN1,CT1,CTs1,Wmom1,rhomom1,Tmom1=conversions(hp1,IAS1,a1,FFl1,FFr1,Fused1,TAT1)
-Vetrim,Vetildetrim,CNtrim,CTtrim,CTstrim,Wmomtrim,rhomomtrim,Tmomtrim=conversions(hptrim,IAStrim,atrim,FFltrim,FFrtrim,Fusedtrim,TATtrim)
-Vecg,Vetildecg,CNcg,CTcg,CTscg,Wmomcg,rhomomcg,Tmomcg=conversions(hpcg,IAScg,acg,FFlcg,FFrcg,Fusedcg,TATcg)
+Ve1,Vetilde1,CN1,CT1,CTs1,Wmom1,rhomom1,Tmom1,M1,Re1=conversions(hp1,IAS1,a1,FFl1,FFr1,Fused1,TAT1)
+Vetrim,Vetildetrim,CNtrim,CTtrim,CTstrim,Wmomtrim,rhomomtrim,Tmomtrim,Mtrim,Retrim=conversions(hptrim,IAStrim,atrim,FFltrim,FFrtrim,Fusedtrim,TATtrim)
+Vecg,Vetildecg,CNcg,CTcg,CTscg,Wmomcg,rhomomcg,Tmomcg,Mcg,Recg=conversions(hpcg,IAScg,acg,FFlcg,FFrcg,Fusedcg,TATcg)
 
 
 
@@ -211,37 +249,50 @@ TCs=CTstrim
 
 deeqstar=detrim-CmTc/Cmdelta*(TCs-TC)
 
-
+width=16
+height=width*9/16
+plt.figure(figsize=(width,height))
+plt.tick_params(axis='both', labelsize=16)
 if CNalpha:
     degree=1
     polyfits=polyfitter(a1,CN1,degree)
     plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
-    plt.plot(polyfits[2],polyfits[3],label='Linear approximation $C_{L_0}$='+str(round(polyfits[4][0],4))+' [-]'+'  $C_{L_α}$='+str(round(polyfits[4][1],4))+' [$°^{-1}$]')
+    plt.plot(polyfits[2],polyfits[3],label='Linear approximation $C_{L_0}$='+str(round(polyfits[4][0],4))+' [-],'+'  $C_{L_α}$='+str(round(polyfits[4][1],4))+' [$°^{-1}$]')
+    plt.plot(np.empty(0),np.empty(0),' ',label='Mach number range: '+str(round(min(M1),2))+', '+str(round(max(M1),2)))
+    plt.plot(np.empty(0),np.empty(0),' ',label='Reynolds number range: '+str(round(min(Re1/10**6),1))+'*$10^6$'+', '+str(round(max(Re1/10**6),1))+'*$10^6$')
     plt.title('Lift curve',fontsize=24)
     plt.xlabel('α [°]',fontsize=20)
     plt.ylabel('$C_L$ [-]',fontsize=20)
-    plt.legend(loc=8)
-
+    plt.legend(loc='upper left',fontsize=18)
+    plt.savefig('Plots/CLalpha')
+    
     
 
 
 
 if CN_CT:
-    degree=2
-    polyfits=polyfitter(CN1,CT1,degree)
+    polyfits=polyfitter2(CN1,CT1)
     plt.plot(polyfits[1],polyfits[0],'o',label='Data points')
-    plt.plot(polyfits[3],polyfits[2],label='Polynomial approximation $C_D$= '+str(round(polyfits[4][0],4))+' '+str(round(polyfits[4][1],4))+'*$C_L$ +'+str(round(polyfits[4][2],4))+'*$C_L^2$'+' [-]')
+    plt.plot(polyfits[3],polyfits[2],label='Polynomial approximation $C_D$= '+str(round(polyfits[4][0],4))+' +'+str(round(polyfits[4][1],4))+'*$C_L^2$'+' [-]')
+    plt.plot(np.empty(0),np.empty(0),' ',label='Mach number range: '+str(round(min(M1),2))+', '+str(round(max(M1),2)))
+    plt.plot(np.empty(0),np.empty(0),' ',label='Reynolds number range: '+str(round(min(Re1/10**6),1))+'*$10^6$'+', '+str(round(max(Re1/10**6),1))+'*$10^6$')
     plt.title('Drag polar',fontsize=24)
     plt.xlabel('$C_L$ [-]',fontsize=20)
     plt.ylabel('$C_D$ [-]',fontsize=20)
-    plt.legend(loc=8)
+    plt.legend(loc='lower right',fontsize=18)
+    plt.savefig('Plots/CLCD')
+    
+    print('lift drag polar constants: Cd0,1/(Pi*A*e)', polyfits[4])
+    print(CD0,1/A/e/pi)
+    emeas=1/polyfits[4][1]/pi/A
 
-    print('lift drag polar constants: Cd0,k,1/(Pi*A*e)', polyfits[4])
-    print(1/A/e/pi)
+
+
+
 
 if elevatortrimcurvea:
     degree=1
-    polyfits=polyfitter(atrim,detrim,degree)
+    polyfits=polyfitter(atrim,deeqstar,degree)
     plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
     plt.plot(polyfits[2],polyfits[3],label='Linear approximation '+r'$\frac{dδ_e}{dα}$= '+str(round(polyfits[4][1],4))+' [-]')
     plt.gca().invert_yaxis()
@@ -250,8 +301,9 @@ if elevatortrimcurvea:
     print ('Cmalpha=',Cmalpha)
     plt.title('Elevator trim curve',fontsize=24)
     plt.xlabel('α [°]',fontsize=20)
-    plt.ylabel('$δ_e$ [°]',fontsize=20)
-    plt.legend(loc=8)
+    plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
+    plt.legend(loc='upper left',fontsize=18)
+    plt.savefig('Plots/elevtrimalpha')
 
 if elevatortrimcurvev:
     degree=2
@@ -262,18 +314,20 @@ if elevatortrimcurvev:
     plt.title('Elevator trim curve',fontsize=24)
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
     plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
-    plt.legend(loc=8)
+    plt.legend(loc='lower left',fontsize=18)
+    plt.savefig('Plots/elevtrimV')
 
 if FeVe:
     degree=2
     polyfits=polyfitter(Vetildetrim,Fetrim,degree)
     plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
-    plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $F_e^\star$='+str(round(polyfits[4][0],4))+' '+str(round(polyfits[4][1],4))+'*$\~V_e$ +'+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [N]')
+    plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $F_e^\star$='+str(round(polyfits[4][0],4))+' +'+str(round(polyfits[4][1],4))+'*$\~V_e$ +'+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [N]')
     plt.gca().invert_yaxis()
     plt.title('Elevator control force curve',fontsize=24)
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
     plt.ylabel('$F_e^\star$ [N]',fontsize=20)
-    plt.legend(loc=8)
+    plt.legend(loc='lower left',fontsize=18)
+    plt.savefig('Plots/FeVe')
 
 
 
