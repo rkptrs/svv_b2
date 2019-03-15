@@ -64,25 +64,40 @@ yawrate = np.loadtxt('Flight Data/yawrate.dat', dtype = 'float')
 rollangle = np.loadtxt('Flight Data/rollangle.dat', dtype = 'float')
 rollrate = np.loadtxt('Flight Data/rollrate.dat', dtype = 'float')
 
+meastimesdemo = ['00:50:07', '00:51:13', '00:52:30', '00:55:43', '00:57:30', '01:00:02', '01:04:00']#measurement times for the demonstration part
+measdemotype = ['Short period', 'Aperiodic Roll', 'Phugoid', 'Dutch Roll', 'Dutch Roll with YD', 'Spiral', 'Parabola'] #which type of manoeuvre was flown
+
+def get_sec(time_str): #takes as input a timestamp string of format (H)H:MM:SS, returns equivalent number of seconds
+    h, m, s = time_str.split(':') 
+    
+    return int(h) * 3600 + int(m) * 60 + int(s)
+meastimesdemosecs = np.zeros(7)
+
+for i in range(len(meastimesdemo)):
+    meastimesdemosecs[i] = get_sec(meastimesdemo[i])*10
+    
+
+
 #plt.plot(deltaa[30000:31000])
 #plt.plot(rollangle[30000:31000])
 
-
+demo = 3
 #state-space  
 #output [1,2,3,4] = [beta, phi, p, r]
 #range aperiodic roll = index 30740 for 20 seconds
 
 Trng = 200
-rng = [30740,30740+Trng]
+rng = [int(meastimesdemosecs[demo]),int(meastimesdemosecs[demo])+Trng]
+
 T = np.linspace(0,Trng/10,Trng)
-U = np.ones((150,1))
-Uzeros = np.zeros((150,1))
+#U = np.ones((150,1))
+#Uzeros = np.zeros((150,1))
 Unew = np.zeros((Trng,2))
-Ua = np.concatenate((U,Uzeros),axis=1)
-Ur = np.concatenate((Uzeros,U),axis=1)
-for i in range(67,150):
-    Ur[i][1] = 0
-    Ua[i][0] = 0
+#Ua = np.concatenate((U,Uzeros),axis=1)
+#Ur = np.concatenate((Uzeros,U),axis=1)
+#for i in range(67,150):
+#    Ur[i][1] = 0
+#    Ua[i][0] = 0
 for i in range(Trng):
     Unew[i][1] = deltar[rng[0]+i]
     Unew[i][0] = deltaa[rng[0]+i]
