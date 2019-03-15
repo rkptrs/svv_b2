@@ -84,14 +84,14 @@ print(np.linalg.eigvals(A_asym2)*b/V)
     
 
 #read flight data
-time = np.loadtxt('Flight Data/time.dat', dtype = 'float')
-deltaa = np.loadtxt('Flight Data/deltaa.dat', dtype = 'float')
-deltar = np.loadtxt('Flight Data/deltar.dat', dtype = 'float')
+time = np.loadtxt('FlightData/time.dat', dtype = 'float')
+deltaa = np.loadtxt('FlightData/deltaa.dat', dtype = 'float')
+deltar = np.loadtxt('FlightData/deltar.dat', dtype = 'float')
 
 
-yawrate = np.loadtxt('Flight Data/yawrate.dat', dtype = 'float')
-rollangle = np.loadtxt('Flight Data/rollangle.dat', dtype = 'float')
-rollrate = np.loadtxt('Flight Data/rollrate.dat', dtype = 'float')
+yawrate = np.loadtxt('FlightData/yawrate.dat', dtype = 'float')
+rollangle = np.loadtxt('FlightData/rollangle.dat', dtype = 'float')
+rollrate = np.loadtxt('FlightData/rollrate.dat', dtype = 'float')
 
 meastimesdemo = ['00:50:07', '00:51:13', '00:52:30', '00:55:42', '00:57:18', '00:59:43', '01:04:00']#measurement times for the demonstration part
 measdemotype = ['Short period', 'Aperiodic Roll', 'Phugoid', 'Dutch Roll', 'Dutch Roll with YD', 'Spiral', 'Parabola'] #which type of manoeuvre was flown
