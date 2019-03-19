@@ -1,4 +1,4 @@
-from Cit_par import *
+from Cit_pars import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
@@ -95,35 +95,38 @@ Cs = np.identity(4)
 # Matrix D
 Ds = np.zeros((4,1))
 
-time8, data8 = givedata('Phugoid', ['aoa', 'tfulbs', 'deltae', 'pitchangle','pitchrate','tas'], False)
+# Import Validation Data and Create Variable Lists
+valtime, valdata = givedata('Phugoid', ['aoa', 'deltae', 'pitchangle','pitchrate','tas'], False)
+
+valalpha = valdata[0:1501, 0] - valdata[0, 0]
+valde = valdata[0:1501,1] * np.pi/180
+valtheta = valdata[0:1501, 2] - valdata[0, 2]
+valq = valdata[0:1501, 3]
+valu = valdata[0:1501, 4] - valdata[0, 4]
+valV = valdata[0:1501, 4]
 
 # Create State Space System
 sys = cmat.ss(As, Bs, Cs, Ds)
 
+# Generate Outputs
 T = np.arange(0, 150.1, 0.1)
 X0 = [0, alpha0, th0, 0]
-#U = np.ones(len(T))*-0.01
-U = data8[0:1501,2]*np.pi/180
 
-# Generate Outputs
-yout, T, xout = cmat.lsim(sys, U=U, T=T, X0=X0)
+yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 
 u = yout[:,0]
-alpha = yout[:,1]
-theta = yout[:,2]
-q = yout[:,3]
+alpha = yout[:,1] * 180/np.pi
+theta = yout[:,2] * 180/np.pi
+q = yout[:,3] * 180/np.pi
 V = V0 + u
-
-print(data8[0,-1])
-print(data8[0,0]*np.pi/180)
-print(data8[0,3]*np.pi/180)
-print(data8[0,2]*np.pi/180)
-# Print Eigenvalues and Plot Graphs
-#plt.plot(T, V)
-#plt.plot(T, data8[0:1501,-1])
-#plt.xlim([T[0], T[-1]])
-#plt.show()
 
 eigs = np.linalg.eig(As)[0]
 plt.scatter(eigs.real, eigs.imag)
 plt.show()
+
+# Plot Graph of Model vs Validation Data
+#plt.plot(T, V)
+#plt.plot(T, valV)
+#plt.xlim([T[0], T[-1]])
+#plt.show()
+
