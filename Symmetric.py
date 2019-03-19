@@ -24,6 +24,8 @@ from Plotting import *
 # theta
 # q
 
+CZu = -0.67
+
 # Parameters for Matrix C1
 C111 = -2 * muc 
 C112 = 0
@@ -116,6 +118,7 @@ sys = cmat.ss(As, Bs, Cs, Ds)
 T = np.arange(0, 150.1, 0.1)
 X0 = [0, alpha0, th0, valq[0]*np.pi/180]
 #V0 = 91.271995
+#W0 = 5976.97
 
 yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 
@@ -130,8 +133,8 @@ eigs = np.linalg.eig(As)[0]
 #plt.show()
 
 # Plot Graph of Model vs Validation Data
-plt.plot(T, V)
-plt.plot(T, valV)
+plt.plot(T, q)
+plt.plot(T, valq)
 #plt.plot(T, np.zeros(len(T)))
 plt.xlim([T[0], T[-1]])
 plt.show()
