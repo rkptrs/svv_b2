@@ -5,9 +5,9 @@ import matplotlib.pyplot as plt
 import sys
 from Plotting import *
 
-##################
-# PHUGOID MOTION #
-##################
+#######################
+# SHORT PERIOD MOTION #
+#######################
 
 # STATE VECTOR
 # u
@@ -100,22 +100,22 @@ Cs = np.identity(4)
 Ds = np.zeros((4,1))
 
 # Import Validation Data and Create Variable Lists
-valtime, valdata = givedata('Phugoid', ['aoa', 'deltae', 'pitchangle','pitchrate','tas'], False)
+valtime, valdata = givedata('Short period', ['aoa', 'deltae', 'pitchangle','pitchrate','tas'], False)
 
-valalpha = valdata[0:1501, 0] - valdata[0, 0]
-valde = valdata[0:1501,1] * np.pi/180
-valtheta = valdata[0:1501, 2] - valdata[0, 2]
-valq = valdata[0:1501, 3]
-valu = valdata[0:1501, 4] - valdata[0, 4]
-valV = valdata[0:1501, 4]
+valalpha = valdata[0:101, 0] - valdata[0, 0]
+valde = valdata[0:101,1] * np.pi/180
+valtheta = valdata[0:101, 2] - valdata[0, 2]
+valq = valdata[0:101, 3]
+valu = valdata[0:101, 4] - valdata[0, 4]
+valV = valdata[0:101, 4]
 
 # Create State Space System
 sys = cmat.ss(As, Bs, Cs, Ds)
 
 # Generate Outputs
-T = np.arange(0, 150.1, 0.1)
+T = np.arange(0, 10.1, 0.1)
 X0 = [0, alpha0, th0, valq[0]*np.pi/180]
-#V0 = 91.271995
+#V0 = 96.730237
 
 yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 

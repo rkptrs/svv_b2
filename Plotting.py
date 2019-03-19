@@ -99,7 +99,7 @@ def givedata(choosedemo, chooseparam, plotting): #function that will return flig
         
     return chosentime, outputdata
 
-#time, data = givedata('Phugoid', ['aoa','pitchangle','pitchrate','tas'], True)
+#time, data = givedata('Short period', ['aoa','pitchangle','pitchrate','tas'], True)
 
 """ Putting lines into the full time-scale plots
 #adding timestamps of series 1 in black
