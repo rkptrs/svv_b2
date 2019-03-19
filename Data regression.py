@@ -14,13 +14,15 @@ CN_CT=False
 elevatortrimcurvea=False
 elevatortrimcurvev=False
 FeVe=False
-
+save=False
 
 CNalpha=True
 #CN_CT=True
 #elevatortrimcurvea=True
 #elevatortrimcurvev=True
 #FeVe=True
+
+save=True
 
 def polyfitter(x1,y1,degree):
     outlierchecks=5
@@ -119,7 +121,7 @@ for i in range(6):####change to 7 for real data
 
 
 # fix thrust.exe singularity at 5th line
-#hp1[4]=hp1[4]*1.01
+#hp1[4]=hp1[4]*1.000001
 #IAS1[4]=IAS1[4]*1.01
 #a1[4]=a1[4]*1.01
 #FFl1[4]=FFl1[4]*1.01
@@ -198,7 +200,7 @@ def conversions(hp,V,alpha,FFl,FFr,Wf,TAT):
 
     Tdiff=Tmom-TmomISA
     Vt=(Gamma*R*TmomISA)**0.5*M
-    rhomom=pmom/R/TmomISA
+    rhomom=pmom/R/Tmom
     Ve=Vt*(rhomom/rho0)**0.5
     Vetilde=Ve*(Ws/Wmom)**0.5
     
@@ -264,7 +266,10 @@ if CNalpha:
     plt.xlabel('α [°]',fontsize=20)
     plt.ylabel('$C_L$ [-]',fontsize=20)
     plt.legend(loc='upper left',fontsize=18)
-    plt.savefig('Plots/CLalpha')
+    if save:
+        plt.savefig('Plots/CLalpha')
+    print('CL0='+str(polyfits[4][0]))
+    print('CLalpha [rad-1]='+str(polyfits[4][1]*180/pi))
     
     
 
@@ -280,11 +285,15 @@ if CN_CT:
     plt.xlabel('$C_L$ [-]',fontsize=20)
     plt.ylabel('$C_D$ [-]',fontsize=20)
     plt.legend(loc='lower right',fontsize=18)
-    plt.savefig('Plots/CLCD')
+    if save:
+        plt.savefig('Plots/CLCD')
+
+    emeas=1/polyfits[4][1]/pi/A
+
     
     print('lift drag polar constants: Cd0,1/(Pi*A*e)', polyfits[4])
     print(CD0,1/A/e/pi)
-    emeas=1/polyfits[4][1]/pi/A
+    print('emeas=',emeas)
 
 
 
@@ -299,11 +308,13 @@ if elevatortrimcurvea:
     print ('-Cmalpha/Cmdelta=',polyfits[4][1])
     Cmalpha=polyfits[4][1]*-Cmdelta
     print ('Cmalpha=',Cmalpha)
+    print ('Cmdelta=', Cmdelta)
     plt.title('Elevator trim curve',fontsize=24)
     plt.xlabel('α [°]',fontsize=20)
     plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
     plt.legend(loc='upper left',fontsize=18)
-    plt.savefig('Plots/elevtrimalpha')
+    if save:
+        plt.savefig('Plots/elevtrimalpha')
 
 if elevatortrimcurvev:
     degree=2
@@ -315,7 +326,8 @@ if elevatortrimcurvev:
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
     plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
     plt.legend(loc='lower left',fontsize=18)
-    plt.savefig('Plots/elevtrimV')
+    if save:
+        plt.savefig('Plots/elevtrimV')
 
 if FeVe:
     degree=2
@@ -327,7 +339,8 @@ if FeVe:
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
     plt.ylabel('$F_e^\star$ [N]',fontsize=20)
     plt.legend(loc='lower left',fontsize=18)
-    plt.savefig('Plots/FeVe')
+    if save:
+        plt.savefig('Plots/FeVe')
 
 
 
