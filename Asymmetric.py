@@ -2,33 +2,9 @@ import control.matlab as cmat
 import control
 import numpy as np
 import matplotlib.pyplot as plt
-from Cit_par import *
+from Cit_para import *
 
 #define initial paramaters
-
-V0 = 59.9
-S = 24.2
-b = 13.36
-CL = 1.136
-mub = 15.5
-KX2 = 0.012
-KZ2 = 0.037
-KXZ = 0.002
-CYb = -0.9896
-CYp = -0.0870
-CYr = 0.4300
-CYda = 0
-CYdr = 0.3037
-Clb = -0.0772
-Clp = -0.3444
-Clr = 0.2800
-Clda = -0.2349
-Cldr = 0.0286
-Cnb = 0.1638
-Cnp = -0.0108
-Cnr = -0.1930
-Cnda = 0.0286
-Cndr = -0.1261
 
 V = V0
 
@@ -74,7 +50,7 @@ B_asym2 = np.matmul(-C1inv,C3)
 C_asym2 = np.identity(4)
 D_asym2 = np.zeros((4,2))
 
-print(np.linalg.eigvals(A_asym2)*b/V)
+#print(np.linalg.eigvals(A_asym2)*b/V)
 
 #eigenvalues
 #eigv = np.linalg.eigvals(A_asym)
@@ -109,6 +85,8 @@ for i in range(len(meastimesdemo)):
 
 #plt.plot(deltaa[30000:31000])
 #plt.plot(rollangle[30000:31000])
+
+
 
 demo = 1
 #state-space  
