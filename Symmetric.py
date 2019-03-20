@@ -24,8 +24,8 @@ from Plotting import *
 ##################
 
 # Tweaking To Make The Model Fit
-CZu = -0.58
-CXu = -0.07
+CZu = -0.6
+CXu = -0.09
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -131,7 +131,9 @@ V = V0 + u
 
 # Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-print(eigs)
+print('EIGENVALUES PHUGOID MOTION')
+print(eigs[2])
+print(eigs[3])
 
 # Plot All Variables
 simdata = np.zeros((1501, 6))

@@ -26,6 +26,7 @@ from Plotting import *
 # Tweaking To Make The Model Fit
 Cma = -0.55
 
+
 # Parameters for Matrix C1
 C111 = -2 * muc 
 C112 = 0
@@ -130,7 +131,9 @@ V = V0 + u
 
 # Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-print(eigs)
+print('EIGENVALUES SHORT PERIOD MOTION')
+print(eigs[0])
+print(eigs[1])
 
 # Plot All Variables
 simdata = np.zeros((101, 6))
