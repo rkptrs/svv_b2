@@ -347,7 +347,7 @@ def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic
         
     return
 
-#time, data = givedata('Phugoid', ['aoa','pitchangle','pitchrate','tas'], True)
+#time, data = givedata('Short period', ['aoa','pitchangle','pitchrate', 'hp', 'tas'], True)
 
 """ Putting lines into the full time-scale plots
 #adding timestamps of series 1 in black

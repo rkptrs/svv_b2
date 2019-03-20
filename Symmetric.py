@@ -24,8 +24,8 @@ from Plotting import *
 ##################
 
 # Tweaking To Make The Model Fit
-CZu = -0.67
-CXu = -0.09
+CZu = -0.58
+CXu = -0.07
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -151,7 +151,3 @@ realdata[:,4] = valq
 realdata[:,5] = valde
 
 compare_phugoid(simdata, realdata)
-
-
-
-

@@ -118,7 +118,7 @@ sys = cmat.ss(As, Bs, Cs, Ds)
 T = np.arange(0, 10.1, 0.1)
 X0 = [0, alpha0, th0, valq[0]*np.pi/180]
 #V0 = 96.730237
-#W0 = 5993.702
+#W0 = 5993.70
 
 yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 
@@ -150,5 +150,3 @@ realdata[:,4] = valq
 realdata[:,5] = valde
 
 compare_shortperiod(simdata, realdata)
-
-
