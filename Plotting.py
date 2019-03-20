@@ -99,7 +99,231 @@ def givedata(choosedemo, chooseparam, plotting): #function that will return flig
         
     return chosentime, outputdata
 
-#time, data = givedata('Phugoid', ['aoa', 'tfulbs', 'pitchangle','pitchrate','tas'], True)
+def compare_aperiodic(modeldata, flightdata): #plots comparison plots for aperiodic roll, needs data arrays from model and flight with columns for time, beta (only simulation, zeros/ones for flight data), phi, p, r, delta_r, delta_a
+    plt.subplot(511) #beta
+    plt.plot(modeldata[:,0], modeldata[:,1]) #model data
+    plt.xlabel('Time [s]')
+    plt.ylabel('β [°]')
+    plt.legend(['Simulation'])
+    plt.grid()
+    
+    plt.subplot(512) #phi
+    plt.plot(modeldata[:,0], modeldata[:,2]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,2]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('ϕ [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(513) #p
+    plt.plot(modeldata[:,0], modeldata[:,3]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,3]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('p [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(514) #r
+    plt.plot(modeldata[:,0], modeldata[:,4]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,4]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('r [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(515) #deltar, deltaa
+    plt.plot(modeldata[:,0], modeldata[:,5]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,5]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('δr [°], δa [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.show()
+        
+    return
+
+def compare_dutchroll(modeldata, flightdata): #plots comparison plots for dutch roll, needs data arrays from model and flight with columns for time, beta (only simulation, zeros/ones for flight data), phi, p, r, delta_r, delta_a
+    plt.subplot(511) #beta
+    plt.plot(modeldata[:,0], modeldata[:,1]) #model data
+    plt.xlabel('Time [s]')
+    plt.ylabel('β [°]')
+    plt.legend(['Simulation'])
+    plt.grid()
+    
+    plt.subplot(512) #phi
+    plt.plot(modeldata[:,0], modeldata[:,2]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,2]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('ϕ [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(513) #p
+    plt.plot(modeldata[:,0], modeldata[:,3]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,3]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('p [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(514) #r
+    plt.plot(modeldata[:,0], modeldata[:,4]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,4]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('r [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(515) #deltar, deltaa
+    plt.plot(modeldata[:,0], modeldata[:,5]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,5]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('δr [°], δa [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.show()
+        
+    return
+
+def compare_phugoid(modeldata, flightdata): #plots comparison plots for phugoid, needs data arrays from model and flight with columns for time, V, alpha, theta, q, delta_e
+    #fig_phugoid = plt.figure()
+    plt.subplot(511) #V
+    plt.plot(modeldata[:,0], modeldata[:,1]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,1]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('V [m/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(512) #alpha
+    plt.plot(modeldata[:,0], modeldata[:,2]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,2]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('α [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(513) #theta
+    plt.plot(modeldata[:,0], modeldata[:,3]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,3]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('θ [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(514) #q
+    plt.plot(modeldata[:,0], modeldata[:,4]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,4]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('q [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(515) #deltae
+    plt.plot(modeldata[:,0], modeldata[:,5]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,5]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('δe [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.show()
+    
+    return
+
+def compare_shortperiod(modeldata, flightdata): #plots comparison plots for aperiodic roll, needs data arrays from model and flight with columns for time, V, alpha, theta, q, delta_e
+    plt.subplot(511) #V
+    plt.plot(modeldata[:,0], modeldata[:,1]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,1]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('V [m/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(512) #alpha
+    plt.plot(modeldata[:,0], modeldata[:,2]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,2]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('α [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(513) #theta
+    plt.plot(modeldata[:,0], modeldata[:,3]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,3]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('θ [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(514) #q
+    plt.plot(modeldata[:,0], modeldata[:,4]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,4]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('q [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(515) #deltae
+    plt.plot(modeldata[:,0], modeldata[:,5]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,5]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('δe [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.show()
+        
+    return
+
+#NOT FINAL YET!!!
+def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic roll, needs data arrays from model and flight with columns for time, beta (only simulation, zeros/ones for flight data), phi, p, r, delta_r, delta_a
+    plt.subplot(511) #beta
+    plt.plot(modeldata[:,0], modeldata[:,1]) #model data
+    plt.xlabel('Time [s]')
+    plt.ylabel('β [°]')
+    plt.legend(['Simulation'])
+    plt.grid()
+    
+    plt.subplot(512) #phi
+    plt.plot(modeldata[:,0], modeldata[:,2]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,2]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('ϕ [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(513) #p
+    plt.plot(modeldata[:,0], modeldata[:,3]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,3]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('p [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(514) #r
+    plt.plot(modeldata[:,0], modeldata[:,4]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,4]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('r [°/s]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.subplot(515) #deltar, deltaa
+    plt.plot(modeldata[:,0], modeldata[:,5]) #model data
+    plt.plot(flightdata[:,0], flightdata[:,5]) #flight data
+    plt.xlabel('Time [s]')
+    plt.ylabel('δr [°], δa [°]')
+    plt.legend(['Simulation', 'Flight Data'])
+    plt.grid()
+    
+    plt.show()
+        
+    return
+
+#time, data = givedata('Phugoid', ['aoa','pitchangle','pitchrate','tas'], True)
 
 """ Putting lines into the full time-scale plots
 #adding timestamps of series 1 in black
