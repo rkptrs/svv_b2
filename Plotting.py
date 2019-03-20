@@ -278,7 +278,6 @@ def compare_shortperiod(modeldata, flightdata): #plots comparison plots for aper
         
     return
 
-#NOT FINAL YET!!!
 def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic roll, needs data arrays from model and flight with columns for time, beta (only simulation, zeros/ones for flight data), phi, p, r, delta_r, delta_a
     plt.subplot(511) #beta
     plt.plot(modeldata[:,0], modeldata[:,1]) #model data
