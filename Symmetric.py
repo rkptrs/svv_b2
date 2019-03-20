@@ -25,6 +25,7 @@ from Plotting import *
 # q
 
 CZu = -0.67
+CXu = -0.09
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -133,8 +134,8 @@ eigs = np.linalg.eig(As)[0]
 #plt.show()
 
 # Plot Graph of Model vs Validation Data
-plt.plot(T, q)
-plt.plot(T, valq)
+plt.plot(T, V, color='black')
+plt.plot(T, valV, color='red')
 #plt.plot(T, np.zeros(len(T)))
 plt.xlim([T[0], T[-1]])
 plt.show()

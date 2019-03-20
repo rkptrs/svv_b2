@@ -24,6 +24,8 @@ from Plotting import *
 # theta
 # q
 
+Cma = -0.55
+
 # Parameters for Matrix C1
 C111 = -2 * muc 
 C112 = 0
@@ -130,10 +132,22 @@ eigs = np.linalg.eig(As)[0]
 #plt.scatter(eigs.real, eigs.imag)
 #plt.show()
 
-# Plot Graph of Model vs Validation Data
-plt.plot(T, V)
-plt.plot(T, valV)
-#plt.plot(T, np.zeros(len(T)))
-plt.xlim([T[0], T[-1]])
-plt.show()
+simdata = np.zeros((101, 6))
+simdata[:,0] = T
+simdata[:,1] = V
+simdata[:,2] = alpha
+simdata[:,3] = theta
+simdata[:,4] = q
+simdata[:,5] = valde
+
+realdata = np.zeros((101, 6))
+realdata[:,0] = T
+realdata[:,1] = valV
+realdata[:,2] = valalpha
+realdata[:,3] = valtheta
+realdata[:,4] = valq
+realdata[:,5] = valde
+
+compare_shortperiod(simdata, realdata)
+
 
