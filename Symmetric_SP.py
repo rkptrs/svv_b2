@@ -2,28 +2,28 @@ from Cit_pars import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
-import sys
 from Plotting import *
 
 #######################
 # SHORT PERIOD MOTION #
 #######################
+# STATE VECTOR        #
+# u                   #
+# alpha               #
+# theta               #
+# q                   #
+#                     #
+# INPUT VECTOR        #
+# delta_e             #
+#                     #
+# OUTPUT VECTOR       #
+# u                   #
+# alpha               #
+# theta               #
+# q                   #
+#######################
 
-# STATE VECTOR
-# u
-# alpha
-# theta
-# q
-
-# INPUT VECTOR
-# delta_e
-
-# OUTPUT VECTOR
-# u
-# alpha
-# theta
-# q
-
+# Tweaking To Make The Model Fit
 Cma = -0.55
 
 # Parameters for Matrix C1
@@ -128,10 +128,11 @@ theta = yout[:,2] * 180/np.pi
 q = yout[:,3] * 180/np.pi
 V = V0 + u
 
+# Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-#plt.scatter(eigs.real, eigs.imag)
-#plt.show()
+print(eigs)
 
+# Plot All Variables
 simdata = np.zeros((101, 6))
 simdata[:,0] = T
 simdata[:,1] = V

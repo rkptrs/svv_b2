@@ -2,28 +2,28 @@ from Cit_pars import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
-import sys
 from Plotting import *
 
 ##################
 # PHUGOID MOTION #
 ##################
+# STATE VECTOR   #
+# u              #
+# alpha          #
+# theta          #
+# q              #
+#                #
+# INPUT VECTOR   #
+# delta_e        #
+#                #
+# OUTPUT VECTOR  #
+# u              #
+# alpha          #
+# theta          #
+# q              #
+##################
 
-# STATE VECTOR
-# u
-# alpha
-# theta
-# q
-
-# INPUT VECTOR
-# delta_e
-
-# OUTPUT VECTOR
-# u
-# alpha
-# theta
-# q
-
+# Tweaking To Make The Model Fit
 CZu = -0.67
 CXu = -0.09
 
@@ -129,14 +129,29 @@ theta = yout[:,2] * 180/np.pi
 q = yout[:,3] * 180/np.pi
 V = V0 + u
 
+# Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-#plt.scatter(eigs.real, eigs.imag)
-#plt.show()
+print(eigs)
 
-# Plot Graph of Model vs Validation Data
-plt.plot(T, V, color='black')
-plt.plot(T, valV, color='red')
-#plt.plot(T, np.zeros(len(T)))
-plt.xlim([T[0], T[-1]])
-plt.show()
+# Plot All Variables
+simdata = np.zeros((1501, 6))
+simdata[:,0] = T
+simdata[:,1] = V
+simdata[:,2] = alpha
+simdata[:,3] = theta
+simdata[:,4] = q
+simdata[:,5] = valde
+
+realdata = np.zeros((1501, 6))
+realdata[:,0] = T
+realdata[:,1] = valV
+realdata[:,2] = valalpha
+realdata[:,3] = valtheta
+realdata[:,4] = valq
+realdata[:,5] = valde
+
+compare_phugoid(simdata, realdata)
+
+
+
 
