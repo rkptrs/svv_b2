@@ -7,12 +7,6 @@ from Symmetric import As
 #print(As)
 
 ###### Short Period motion #########
-print(muc)
-print()
-print(CZadot)
-print()
-print(CZq)
-print()
 
 
 # Eigenvalues of the state space A matrix
