@@ -16,13 +16,13 @@ elevatortrimcurvev=False
 FeVe=False
 save=False
 
-CNalpha=True
-#CN_CT=True
+#CNalpha=True
+CN_CT=True
 #elevatortrimcurvea=True
 #elevatortrimcurvev=True
 #FeVe=True
 
-save=True
+#save=True
 
 def polyfitter(x1,y1,degree):
     outlierchecks=5
@@ -45,6 +45,7 @@ def polyfitter(x1,y1,degree):
         e=y1-ycheck
         threshold=2
         deleters=np.array([])
+        print ('maxzscore=', max(abs(scipy.stats.zscore(e))))
         for i in range(len(e)):
             if abs(scipy.stats.zscore(e)[i])>threshold:
                 x1=np.delete(x1,i)
@@ -60,6 +61,7 @@ def polyfitter(x1,y1,degree):
     for cff in coefficients:
         y+=cff*x**i
         i+=1
+    print ('correlation=', np.corrcoef(ycheck,y1)[0,1])
     return x1,y1,x,y,coefficients
 
 def polyfitter2(x1,y1):
@@ -82,6 +84,7 @@ def polyfitter2(x1,y1):
         e=y1-ycheck
         threshold=2
         deleters=np.array([])
+        print ('maxzscore=', max(abs(scipy.stats.zscore(e))))
         for i in range(len(e)):
             if abs(scipy.stats.zscore(e)[i])>threshold:
                 x1=np.delete(x1,i)
@@ -95,10 +98,11 @@ def polyfitter2(x1,y1):
     step=(max(x1)-min(x1))/2/len(x1)
     x=np.arange(min(x1),max(x1)+step,step)
     y=func(x,coeff[0],coeff[1])
+    print ('correlation=', np.corrcoef(ycheck,y1)[0,1])
     return x1,y1,x,y,coeff
 
 
-workbook = xlrd.open_workbook('Post_Flight_Datasheet.xlsx')
+workbook = xlrd.open_workbook('REFERENCE_Post_Flight_Datasheet.xlsx')
 
 sheet = workbook.sheet_by_name('Sheet1')
 
@@ -121,7 +125,7 @@ for i in range(6):####change to 7 for real data
 
 
 # fix thrust.exe singularity at 5th line
-#hp1[4]=hp1[4]*1.000001
+hp1[4]=hp1[4]*1.000001
 #IAS1[4]=IAS1[4]*1.01
 #a1[4]=a1[4]*1.01
 #FFl1[4]=FFl1[4]*1.01
@@ -199,7 +203,7 @@ def conversions(hp,V,alpha,FFl,FFr,Wf,TAT):
     TmomISA=Temp0+Lambda*hp
 
     Tdiff=Tmom-TmomISA
-    Vt=(Gamma*R*TmomISA)**0.5*M
+    Vt=(Gamma*R*Tmom)**0.5*M
     rhomom=pmom/R/Tmom
     Ve=Vt*(rhomom/rho0)**0.5
     Vetilde=Ve*(Ws/Wmom)**0.5
@@ -226,11 +230,13 @@ def conversions(hp,V,alpha,FFl,FFr,Wf,TAT):
     os.spawnl(0,"thrust(1).exe",'args')
 
     T = np.loadtxt( 'thrust.dat' )
-    D=np.array([])
+    Ds=np.array([])
     for line in T:
-        Ds=np.append(D,sum(line))
+        Ds=np.append(Ds,sum(line))
     CTs=Ds/(0.5*rho0*Ve**2*S)
     Re=Vt*c/nu
+    print('D',D)
+    print('Ds',Ds)
 
     return Ve,Vetilde,CN,CT,CTs,Wmom,rhomom,Tmom,M,Re
 
@@ -250,6 +256,8 @@ TC=CNtrim
 TCs=CTstrim
 
 deeqstar=detrim-CmTc/Cmdelta*(TCs-TC)
+
+Festar=Fetrim*Ws/Wmomtrim
 
 width=16
 height=width*9/16
@@ -282,8 +290,8 @@ if CN_CT:
     plt.plot(np.empty(0),np.empty(0),' ',label='Mach number range: '+str(round(min(M1),2))+', '+str(round(max(M1),2)))
     plt.plot(np.empty(0),np.empty(0),' ',label='Reynolds number range: '+str(round(min(Re1/10**6),1))+'*$10^6$'+', '+str(round(max(Re1/10**6),1))+'*$10^6$')
     plt.title('Drag polar',fontsize=24)
-    plt.xlabel('$C_L$ [-]',fontsize=20)
-    plt.ylabel('$C_D$ [-]',fontsize=20)
+    plt.xlabel('$C_D$ [-]',fontsize=20)
+    plt.ylabel('$C_L$ [-]',fontsize=20)
     plt.legend(loc='lower right',fontsize=18)
     if save:
         plt.savefig('Plots/CLCD')
@@ -331,7 +339,7 @@ if elevatortrimcurvev:
 
 if FeVe:
     degree=2
-    polyfits=polyfitter(Vetildetrim,Fetrim,degree)
+    polyfits=polyfitter(Vetildetrim,Festar,degree)
     plt.plot(polyfits[0],polyfits[1],'o',label='Data points')
     plt.plot(polyfits[2],polyfits[3],label='Polynomial approximation $F_e^\star$='+str(round(polyfits[4][0],4))+' +'+str(round(polyfits[4][1],4))+'*$\~V_e$ +'+str(round(polyfits[4][2],4))+'*$\~V_e^2$'+' [N]')
     plt.gca().invert_yaxis()

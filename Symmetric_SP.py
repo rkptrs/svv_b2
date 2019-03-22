@@ -2,27 +2,31 @@ from Cit_pars import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
-import sys
 from Plotting import *
 
 #######################
 # SHORT PERIOD MOTION #
 #######################
+# STATE VECTOR        #
+# u                   #
+# alpha               #
+# theta               #
+# q                   #
+#                     #
+# INPUT VECTOR        #
+# delta_e             #
+#                     #
+# OUTPUT VECTOR       #
+# u                   #
+# alpha               #
+# theta               #
+# q                   #
+#######################
 
-# STATE VECTOR
-# u
-# alpha
-# theta
-# q
-
-# INPUT VECTOR
-# delta_e
-
-# OUTPUT VECTOR
-# u
-# alpha
-# theta
-# q
+# Tweaking To Make The Model Fit
+CZu = -0.6
+CXu = -0.09
+Cma = -0.55
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -116,7 +120,7 @@ sys = cmat.ss(As, Bs, Cs, Ds)
 T = np.arange(0, 10.1, 0.1)
 X0 = [0, alpha0, th0, valq[0]*np.pi/180]
 #V0 = 96.730237
-#W0 = 5993.702
+#W0 = 5993.70
 
 yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 
@@ -126,14 +130,27 @@ theta = yout[:,2] * 180/np.pi
 q = yout[:,3] * 180/np.pi
 V = V0 + u
 
+# Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-#plt.scatter(eigs.real, eigs.imag)
-#plt.show()
+print('EIGENVALUES SHORT PERIOD MOTION')
+print(eigs[0])
+print(eigs[1])
 
-# Plot Graph of Model vs Validation Data
-plt.plot(T, V)
-plt.plot(T, valV)
-#plt.plot(T, np.zeros(len(T)))
-plt.xlim([T[0], T[-1]])
-plt.show()
+# Plot All Variables
+simdata = np.zeros((101, 6))
+simdata[:,0] = T
+simdata[:,1] = V
+simdata[:,2] = alpha
+simdata[:,3] = theta
+simdata[:,4] = q
+simdata[:,5] = valde
 
+realdata = np.zeros((101, 6))
+realdata[:,0] = T
+realdata[:,1] = valV
+realdata[:,2] = valalpha
+realdata[:,3] = valtheta
+realdata[:,4] = valq
+realdata[:,5] = valde
+
+compare_shortperiod(simdata, realdata)
