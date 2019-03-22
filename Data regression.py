@@ -17,12 +17,12 @@ FeVe=False
 save=False
 
 #CNalpha=True
-CN_CT=True
+#CN_CT=True
 #elevatortrimcurvea=True
 #elevatortrimcurvev=True
 #FeVe=True
 
-#save=True
+save=True
 
 def polyfitter(x1,y1,degree):
     outlierchecks=5
@@ -102,7 +102,7 @@ def polyfitter2(x1,y1):
     return x1,y1,x,y,coeff
 
 
-workbook = xlrd.open_workbook('REFERENCE_Post_Flight_Datasheet.xlsx')
+workbook = xlrd.open_workbook('Post_Flight_Datasheet.xlsx')
 
 sheet = workbook.sheet_by_name('Sheet1')
 
@@ -125,7 +125,7 @@ for i in range(6):####change to 7 for real data
 
 
 # fix thrust.exe singularity at 5th line
-hp1[4]=hp1[4]*1.000001
+#hp1[4]=hp1[4]*1.000001
 #IAS1[4]=IAS1[4]*1.01
 #a1[4]=a1[4]*1.01
 #FFl1[4]=FFl1[4]*1.01
@@ -263,6 +263,9 @@ width=16
 height=width*9/16
 plt.figure(figsize=(width,height))
 plt.tick_params(axis='both', labelsize=16)
+plt.grid(True, which='both')
+
+
 if CNalpha:
     degree=1
     polyfits=polyfitter(a1,CN1,degree)
@@ -321,6 +324,7 @@ if elevatortrimcurvea:
     plt.xlabel('α [°]',fontsize=20)
     plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
     plt.legend(loc='upper left',fontsize=18)
+    plt.axhline(y=0, color='k')
     if save:
         plt.savefig('Plots/elevtrimalpha')
 
@@ -333,7 +337,8 @@ if elevatortrimcurvev:
     plt.title('Elevator trim curve',fontsize=24)
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
     plt.ylabel('$δ_{e_{eq}}^\star$ [°]',fontsize=20)
-    plt.legend(loc='lower left',fontsize=18)
+    plt.legend(loc='upper right',fontsize=18)
+    plt.axhline(y=0, color='k')
     if save:
         plt.savefig('Plots/elevtrimV')
 
@@ -347,12 +352,13 @@ if FeVe:
     plt.xlabel('$\~V_e$ [m/s]',fontsize=20)
     plt.ylabel('$F_e^\star$ [N]',fontsize=20)
     plt.legend(loc='lower left',fontsize=18)
+    plt.axhline(y=0, color='k')
     if save:
         plt.savefig('Plots/FeVe')
 
+plt.plot(deeqstar,Festar)
 
 
-plt.grid()
 plt.show()
 
 
