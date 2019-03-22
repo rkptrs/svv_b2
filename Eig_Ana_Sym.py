@@ -2,6 +2,18 @@
 from math import *
 import numpy as np
 from Symmetric_Maarten import *
+
+print("#################################")
+print()
+print("CZadot = ", CZadot)
+print("MUc = ", muc)
+print("CZq = ", CZq)
+print("CX0 = ", CX0)
+print("CXq = ", CXq)
+print()
+
+
+
 print("#################################")
 print()
 # Eigenvalues of the state space A matrix
@@ -36,8 +48,9 @@ print()
 ##B = CXu*(CZq + 2*muc) - CXq*CZu
 ##C = -CZ0*CXu
 
-A = 2*muc*(CZa*Cmq - 2*muc*Cma)
-B = 2*muc*(CXu*Cma - Cmu*CXa) + Cmq*(CZu*CXa - CXu*CZa)
+A = 2*muc*(CZa*Cmq - (CZq + 2*muc)*Cma)
+B = 2*muc*(CXu*Cma - CXa*Cmu) - CXu*(CZa*Cmq - CZq*Cma) + CXa*(CZu*Cmq - CZq*Cmu) - CXq*(CZu*Cma - CZa*Cmu)
+
 C = CZ0*(Cmu*CZa-CZu*Cma)
 
 Lc1 = (-B + (B**2 - 4*A*C)**0.5) / (2*A)
