@@ -24,8 +24,9 @@ from Plotting import *
 #######################
 
 # Tweaking To Make The Model Fit
+CZu = -0.6
+CXu = -0.09
 Cma = -0.55
-
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
