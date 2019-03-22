@@ -1,54 +1,57 @@
 #### Analytical Eigenvalues using simplified EOM ####
 from math import *
 import numpy as np
-from Cit_par import *
-from Symmetric import As
-
-#print(As)
-
-###### Short Period motion #########
-
-
+from Symmetric_Maarten import *
+print("#################################")
+print()
 # Eigenvalues of the state space A matrix
-##print(np.linalg.eigvals(As))
-##print()
-      
-# The EOM consists of the Z_b and M equation, with variables alpha and qc/v
+print("State space eigenvalues: ", np.linalg.eigvals(As))
+print()
+print("#################################")
+print()
 
 
-# Eigenvalues of EOM matrix
+###### Short Period motion ######
+###### The EOM consists of the Z_b and M equation, with variables alpha and qc/v ###########
+
+
 A = 4 * (muc)**2 * KY2
-B = - 2 * muc * (Cmq + CZa*KY2 + Cmadot)
-C = CZa*Cmq - 2*muc*Cma
+B = - 2 * muc * (Cmq + CZa*KY2 + Cmadot) - CZq*Cmadot
+C = CZa*Cmq - (2*muc + CZq)*Cma
 
-Lc1 = (-B + sqrt(4*A*C - B**2)) / (2*A)
-Lc2 = (-B - sqrt(4*A*C - B**2)) / (2*A)
-
-#print( Lc1, Lc2)
-#print()
+Lc1 = (-B + (B**2 - 4*A*C)**0.5) / (2*A)
+Lc2 = (-B - (B**2 - 4*A*C)**0.5) / (2*A)
 
 L1 = Lc1 * V0 / c
 L2 = Lc2 * V0 / c
 
-#print(L1,L2)
+print("Analytical Short period eigenvalues: ",L1,L2)
+print()
+print("#################################")
+print()
+###### Phugoid Motion ######
+###### The EOM consist of X, Z and kinematic euquation with variables U, theta and q.
 
-# EOM to state space and then eigenvalues of the A matrix
+##A = -2*muc*(CZq + 2*muc)
+##B = CXu*(CZq + 2*muc) - CXq*CZu
+##C = -CZ0*CXu
 
-C111 = - 2 * muc
-C121 = Cmadot
-C112 = 0
-C122 = - 2*muc*KY2*c/V0
-C1 = np.matrix([[C111,C112],
-                [C121,C122]])
+A = 2*muc*(CZa*Cmq - 2*muc*Cma)
+B = 2*muc*(CXu*Cma - Cmu*CXa) + Cmq*(CZu*CXa - CXu*CZa)
+C = CZ0*(Cmu*CZa-CZu*Cma)
 
-C211 = CZa*V0/c
-C221 = Cma*V0/c
-C212 = 2*muc + CZq
-C222 = Cmq
-C2 = np.matrix([[C211,C212],
-                [C221,C222]])
+Lc1 = (-B + (B**2 - 4*A*C)**0.5) / (2*A)
+Lc2 = (-B - (B**2 - 4*A*C)**0.5) / (2*A)
 
-A = - (np.linalg.inv(C1)) * C2
-##print(np.linalg.eigvals(A))
+L1 = Lc1 * V0 / c
+L2 = Lc2 * V0 / c
+
+print ("Analytical Phugoid eigenvalues: ",L1,L2)
+print()
+print("#################################")
+
+
+
+
 
 
