@@ -6,7 +6,7 @@ from Cit_para import *
 
 #define initial paramaters
 
-
+V = V0
 
 
 
@@ -17,12 +17,12 @@ from Cit_para import *
 #Clp = -0.6516
 #Clr = 0.2376
 #
-Clp = -0.971
-Clb = -0.1408
-Clr = 0.1198
-Cnr = -0.22
-Cnb = 0.1601
-CYb = -0.863
+##Clp = -0.971
+##Clb = -0.1408
+##Clr = 0.1198
+##Cnr = -0.22
+##Cnb = 0.1601
+##CYb = -0.863
 #
 #Clb = -0.132
 #Clr = 0.68
@@ -125,17 +125,17 @@ for i in range(Trng):
     
     
     
-minit = 14064.8 #lbs
-mused = fuelused[rng[0]]
-hp0 = hp[rng[0]]
-V0 = tas[rng[0]]
-V = V0
-m = (minit-mused)*0.45359237
-rho    = rho0 * pow( ((1+(Lambda * hp0 / Temp0))), (-((g / (Lambda*R)) + 1)))  
-W      = m * g    
-CL = 2 * W / (rho * V0 ** 2 * S)              # Lift coefficient [ ]
-CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e) # Drag coefficient [ ]
-mub    = m / (rho * S * b)
+##minit = 14064.8 #lbs
+##mused = fuelused[rng[0]]
+##hp0 = hp[rng[0]]
+##V0 = tas[rng[0]]
+##V = V0
+##m = (minit-mused)*0.45359237
+##rho    = rho0 * pow( ((1+(Lambda * hp0 / Temp0))), (-((g / (Lambda*R)) + 1)))  
+##W      = m * g    
+##CL = 2 * W / (rho * V0 ** 2 * S)              # Lift coefficient [ ]
+##CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e) # Drag coefficient [ ]
+##mub    = m / (rho * S * b)
     
       #create C1 C2 C3
 C1 = [[(CYbdot-2*mub)*b/V, 0, 0, 0],[0, 1, 0, 0],[0, 0, -2*mub*KX2*b**2/V**2, 2*mub*KXZ*b**2/V**2],[Cnbdot*b/V, 0, 2*mub*KXZ*b**2/V**2, -2*mub*KZ2*b**2/V**2]]
