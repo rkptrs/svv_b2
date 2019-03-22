@@ -5,7 +5,7 @@ from Asymmetric_Maarten import *
 
 print("#################################")
 print()
-# Eigenvalues of the state space A matrix
+### Eigenvalues of the state space A matrix
 print("State space eigenvalues: ", np.linalg.eigvals(Aa))
 print()
 print("#################################")
@@ -26,18 +26,27 @@ print()
 
 ###### Dutch Roll motion ######
 ######              ###########
+Lknown = Lb
 
 
+A = 8*mub**2*(KXZ**2 - KX2*KZ2)
+B = 2*mub*(KXZ*Cnp + KXZ*Clr + KZ2*Clp + KX2*Cnr)
+C = 1/2 * (Clr*Cnp - Cnr*Clp) - 4*mub*(KXZ*Clb + KX2*Cnb)
+D = -Clb*Cnp + Clp*Cnb
 
-##Lb1 = (-B + (B**2 - 4*A*C)**0.5) / (2*A)
-##Lb2 = (-B - (B**2 - 4*A*C)**0.5) / (2*A)
-##
-##L1 = Lc1 * V0 / b
-##L2 = Lc2 * V0 / b
+f = B/A + Lknown
+g = C/A + Lknown*f
+h = D/A + Lknown*g # should be zero, equals 0.005009
 
-##print ("Analytical Dutch Roll eigenvalues: ",L1,L2)
-##print()
-##print("#################################")
+Lb1 = (-f + (f**2 - 4*g)**0.5) / 2
+Lb2 = (-f - (f**2 - 4*g)**0.5) / 2
+
+L1 = Lb1 * V0 / b
+L2 = Lb2 * V0 / b
+
+print ("Analytical Dutch Roll eigenvalues: ",L1,L2)
+print()
+print("#################################")
 
 
 ###### Spiral motion ######
