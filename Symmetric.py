@@ -1,4 +1,4 @@
-from Cit_pars import *
+from Cit_pars_phugoid import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
@@ -27,7 +27,6 @@ from Plotting import *
 CZu = -0.59
 CXa = -0.8
 CXu = -0.05
-Cma = -0.55
 
 
 # Parameters for Matrix C1

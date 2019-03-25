@@ -1,4 +1,4 @@
-from Cit_pars import *
+from Cit_pars_shortperiod import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
@@ -27,7 +27,6 @@ from Plotting import *
 CZu = -0.59
 CXa = -0.8
 CXu = -0.05
-Cma = -0.55
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -133,9 +132,9 @@ V = V0 + u
 
 # Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-print('EIGENVALUES SHORT PERIOD MOTION')
-print(eigs[0])
-print(eigs[1])
+##print('EIGENVALUES SHORT PERIOD MOTION')
+##print(eigs[0])
+##print(eigs[1])
 
 # Plot All Variables
 simdata = np.zeros((101, 6))
@@ -154,4 +153,4 @@ realdata[:,3] = valtheta
 realdata[:,4] = valq
 realdata[:,5] = valde
 
-compare_shortperiod(simdata, realdata)
+##compare_shortperiod(simdata, realdata)
