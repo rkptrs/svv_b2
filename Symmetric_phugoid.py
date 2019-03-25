@@ -133,9 +133,9 @@ V = V0 + u
 
 # Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-print('EIGENVALUES PHUGOID MOTION')
-print(eigs[2])
-print(eigs[3])
+##print('EIGENVALUES PHUGOID MOTION')
+##print(eigs[2])
+##print(eigs[3])
 
 # Plot All Variables
 simdata = np.zeros((1501, 6))
@@ -154,4 +154,4 @@ realdata[:,3] = valtheta
 realdata[:,4] = valq
 realdata[:,5] = valde
 
-compare_phugoid(simdata, realdata)
+##compare_phugoid(simdata, realdata)

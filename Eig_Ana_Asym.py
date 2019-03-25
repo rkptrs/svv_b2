@@ -3,30 +3,40 @@ from math import *
 import numpy as np
 from Asymmetric_Maarten import *
 
-print("#################################")
-print()
-### Eigenvalues of the state space A matrix
-print("State space eigenvalues: ", np.linalg.eigvals(Aa))
-print()
-print("#################################")
-print()
+i = np.complex(0,1)
 
+print("#################################")
+print()
 
 ###### Aperiodic Roll motion ######
 ######                   ###########
 
+print("------- Aperiodic Roll ------- ")
+print()
+print(" State space")
+print(np.linalg.eigvals(Aa_aperiodic))
+print()
+
+
+mub = mub_aperiodic
 
 Lb = Clp / (4*mub*KX2)
 L = Lb*V0/b
 
-print("Analytical Aperiodic Roll eigenvalues: ",L)
-print()
-print("#################################")
+print("Analytical")
+print(L)
 print()
 
 ###### Dutch Roll motion ######
 ######              ###########
+mub = mub_dutchroll
 Lknown = Lb
+
+print("------- Dutch Roll ------- ")
+print()
+print(" State space")
+print(np.linalg.eigvals(Aa_dutchroll))
+print()
 
 
 A = 8*mub**2*(KXZ**2 - KX2*KZ2)
@@ -36,21 +46,30 @@ D = -Clb*Cnp + Clp*Cnb
 
 f = B/A + Lknown
 g = C/A + Lknown*f
-h = D/A + Lknown*g # should be zero, equals 0.005009
+h = D/A + Lknown*g # should be zero, equals 0.0131
+print(h)
 
-Lb1 = (-f + (f**2 - 4*g)**0.5) / 2
-Lb2 = (-f - (f**2 - 4*g)**0.5) / 2
+Lb1 = (-f + i*(-f**2 + 4*g)**0.5) / 2
+Lb2 = (-f - i*(-f**2 + 4*g)**0.5) / 2
 
 L1 = Lb1 * V0 / b
 L2 = Lb2 * V0 / b
 
-print ("Analytical Dutch Roll eigenvalues: ",L1,L2)
+print ("Analytical")
+print(L1, L2)
 print()
-print("#################################")
 
 
 ###### Spiral motion ######
 ######              ###########
+mub = mub_spiral
+
+print("------- Spiral ------- ")
+print()
+print(" State space")
+print(np.linalg.eigvals(Aa_spiral))
+print()
+
 
 A = 2*CL*(Clb*Cnr - Cnb*Clr)
 B = CYb*(Clp*Cnr - Clr*Cnp) + (CYr - 4*mub)*(Clb*Cnp - Cnb*Clp)
@@ -58,8 +77,9 @@ B = CYb*(Clp*Cnr - Clr*Cnp) + (CYr - 4*mub)*(Clb*Cnp - Cnb*Clp)
 Lb = A/B
 L = Lb*V0/b
 
-print ("Analytical Spiral motion eigenvalues: ",L)
-print()
-print("#################################")
+print ("Analytical")
+print(L)
+
+
 
 

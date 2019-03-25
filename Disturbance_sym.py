@@ -1,8 +1,7 @@
-from Cit_pars import *
+from Cit_par import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
-from Plotting import *
 
 ##################
 # PHUGOID MOTION #
@@ -24,7 +23,7 @@ from Plotting import *
 ##################
 
 # Tweaking To Make The Model Fit
-CZu = -0.55
+CZu = -0.59
 CXa = -0.8
 CXu = -0.05
 Cma = -0.55
@@ -105,26 +104,17 @@ Cs = np.identity(4)
 # Matrix D
 Ds = np.zeros((4,1))
 
-# Import Validation Data and Create Variable Lists
-valtime, valdata = givedata('Phugoid', ['aoa', 'deltae', 'pitchangle','pitchrate','tas'], False)
-
-valalpha = valdata[0:1501, 0] - valdata[0, 0]
-valde = valdata[0:1501,1] * np.pi/180
-valtheta = valdata[0:1501, 2] - valdata[0, 2]
-valq = valdata[0:1501, 3]
-valu = valdata[0:1501, 4] - valdata[0, 4]
-valV = valdata[0:1501, 4]
-
 # Create State Space System
 sys = cmat.ss(As, Bs, Cs, Ds)
 
 # Generate Outputs
 T = np.arange(0, 150.1, 0.1)
-X0 = [0, alpha0, th0, valq[0]*np.pi/180]
+X0 = [0, alpha0, th0, 0]
+U = np.ones(len(T)) * -0.005
 #V0 = 91.271995
 #W0 = 5976.97
 
-yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
+yout, T, xout = cmat.lsim(sys, U=U, T=T, X0=X0)
 
 u = yout[:,0]
 alpha = yout[:,1] * 180/np.pi
@@ -132,27 +122,49 @@ theta = yout[:,2] * 180/np.pi
 q = yout[:,3] * 180/np.pi
 V = V0 + u
 
-# Calculate Eigenvalues of the Model
-eigs = np.linalg.eig(As)[0]
-##print('EIGENVALUES PHUGOID MOTION')
-##print(eigs[2])
-##print(eigs[3])
+modeldata = np.zeros((1501, 6))
+modeldata[:,0] = T
+modeldata[:,1] = V
+modeldata[:,2] = alpha
+modeldata[:,3] = theta
+modeldata[:,4] = q
+modeldata[:,5] = U
 
-# Plot All Variables
-simdata = np.zeros((1501, 6))
-simdata[:,0] = T
-simdata[:,1] = V
-simdata[:,2] = alpha
-simdata[:,3] = theta
-simdata[:,4] = q
-simdata[:,5] = valde
+plt.subplot(511) #V
+plt.plot(modeldata[:,0], modeldata[:,1], color='black') #model data
+plt.xlabel('Time [s]')
+plt.ylabel('V [m/s]')
+plt.xlim([modeldata[0,0], modeldata[-1,0]])
+plt.grid()
+   
+plt.subplot(512) #alpha
+plt.plot(modeldata[:,0], modeldata[:,2], color='black') #model data
+plt.xlabel('Time [s]')
+plt.ylabel('α [°]')
+plt.xlim([modeldata[0,0], modeldata[-1,0]])
+plt.grid()
+    
+plt.subplot(513) #theta
+plt.plot(modeldata[:,0], modeldata[:,3], color='black') #model data
+plt.xlabel('Time [s]')
+plt.ylabel('θ [°]')
+plt.xlim([modeldata[0,0], modeldata[-1,0]])
+plt.grid()
+    
+plt.subplot(514) #q
+plt.plot(modeldata[:,0], modeldata[:,4], color='black') #model data
+plt.xlabel('Time [s]')
+plt.ylabel('q [°/s]')
+plt.xlim([modeldata[0,0], modeldata[-1,0]])
+plt.grid()
+    
+plt.subplot(515) #deltae
+plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
+plt.xlabel('Time [s]')
+plt.ylabel('δe [°]')
+plt.xlim([modeldata[0,0], modeldata[-1,0]])
+plt.grid()
+    
+plt.show()
 
-realdata = np.zeros((1501, 6))
-realdata[:,0] = T
-realdata[:,1] = valV
-realdata[:,2] = valalpha
-realdata[:,3] = valtheta
-realdata[:,4] = valq
-realdata[:,5] = valde
-##
-##compare_phugoid(simdata, realdata)
+

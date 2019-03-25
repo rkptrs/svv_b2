@@ -1,4 +1,4 @@
-from Cit_pars import *
+from Cit_pars_shortperiod import *
 import numpy as np
 import control.matlab as cmat
 import matplotlib.pyplot as plt
@@ -24,10 +24,9 @@ from Plotting import *
 #######################
 
 # Tweaking To Make The Model Fit
-CZu = -0.55
+CZu = -0.59
 CXa = -0.8
 CXu = -0.05
-Cma = -0.55
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -120,8 +119,8 @@ sys = cmat.ss(As, Bs, Cs, Ds)
 # Generate Outputs
 T = np.arange(0, 10.1, 0.1)
 X0 = [0, alpha0, th0, valq[0]*np.pi/180]
-#V0 = 96.730237
-#W0 = 5993.70
+##V0 = 96.730237
+##W0 = 5993.70
 
 yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 
