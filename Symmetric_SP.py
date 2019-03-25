@@ -24,7 +24,7 @@ from Plotting import *
 #######################
 
 # Tweaking To Make The Model Fit
-CZu = -0.55
+CZu = -0.59
 CXa = -0.8
 CXu = -0.05
 Cma = -0.55

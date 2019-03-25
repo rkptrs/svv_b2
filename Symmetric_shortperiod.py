@@ -4,31 +4,30 @@ import control.matlab as cmat
 import matplotlib.pyplot as plt
 from Plotting import *
 
-##################
-# PHUGOID MOTION #
-##################
-# STATE VECTOR   #
-# u              #
-# alpha          #
-# theta          #
-# q              #
-#                #
-# INPUT VECTOR   #
-# delta_e        #
-#                #
-# OUTPUT VECTOR  #
-# u              #
-# alpha          #
-# theta          #
-# q              #
-##################
+#######################
+# SHORT PERIOD MOTION #
+#######################
+# STATE VECTOR        #
+# u                   #
+# alpha               #
+# theta               #
+# q                   #
+#                     #
+# INPUT VECTOR        #
+# delta_e             #
+#                     #
+# OUTPUT VECTOR       #
+# u                   #
+# alpha               #
+# theta               #
+# q                   #
+#######################
 
 # Tweaking To Make The Model Fit
-CZu = -0.55
+CZu = -0.59
 CXa = -0.8
 CXu = -0.05
 Cma = -0.55
-
 
 # Parameters for Matrix C1
 C111 = -2 * muc 
@@ -106,23 +105,23 @@ Cs = np.identity(4)
 Ds = np.zeros((4,1))
 
 # Import Validation Data and Create Variable Lists
-valtime, valdata = givedata('Phugoid', ['aoa', 'deltae', 'pitchangle','pitchrate','tas'], False)
+valtime, valdata = givedata('Short period', ['aoa', 'deltae', 'pitchangle','pitchrate','tas'], False)
 
-valalpha = valdata[0:1501, 0] - valdata[0, 0]
-valde = valdata[0:1501,1] * np.pi/180
-valtheta = valdata[0:1501, 2] - valdata[0, 2]
-valq = valdata[0:1501, 3]
-valu = valdata[0:1501, 4] - valdata[0, 4]
-valV = valdata[0:1501, 4]
+valalpha = valdata[0:101, 0] - valdata[0, 0]
+valde = valdata[0:101,1] * np.pi/180
+valtheta = valdata[0:101, 2] - valdata[0, 2]
+valq = valdata[0:101, 3]
+valu = valdata[0:101, 4] - valdata[0, 4]
+valV = valdata[0:101, 4]
 
 # Create State Space System
 sys = cmat.ss(As, Bs, Cs, Ds)
 
 # Generate Outputs
-T = np.arange(0, 150.1, 0.1)
+T = np.arange(0, 10.1, 0.1)
 X0 = [0, alpha0, th0, valq[0]*np.pi/180]
-#V0 = 91.271995
-#W0 = 5976.97
+#V0 = 96.730237
+#W0 = 5993.70
 
 yout, T, xout = cmat.lsim(sys, U=valde, T=T, X0=X0)
 
@@ -134,12 +133,12 @@ V = V0 + u
 
 # Calculate Eigenvalues of the Model
 eigs = np.linalg.eig(As)[0]
-##print('EIGENVALUES PHUGOID MOTION')
-##print(eigs[2])
-##print(eigs[3])
+print('EIGENVALUES SHORT PERIOD MOTION')
+print(eigs[0])
+print(eigs[1])
 
 # Plot All Variables
-simdata = np.zeros((1501, 6))
+simdata = np.zeros((101, 6))
 simdata[:,0] = T
 simdata[:,1] = V
 simdata[:,2] = alpha
@@ -147,12 +146,12 @@ simdata[:,3] = theta
 simdata[:,4] = q
 simdata[:,5] = valde
 
-realdata = np.zeros((1501, 6))
+realdata = np.zeros((101, 6))
 realdata[:,0] = T
 realdata[:,1] = valV
 realdata[:,2] = valalpha
 realdata[:,3] = valtheta
 realdata[:,4] = valq
 realdata[:,5] = valde
-##
-##compare_phugoid(simdata, realdata)
+
+compare_shortperiod(simdata, realdata)

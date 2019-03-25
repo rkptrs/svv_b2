@@ -1,6 +1,8 @@
-#### Analytical Eigenvalues using simplified EOM ####
 from math import *
 import numpy as np
+
+
+#####Short Period
 from Symmetric_Maarten import *
 
 print("#################################")
