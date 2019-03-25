@@ -99,6 +99,78 @@ def givedata(choosedemo, chooseparam, plotting): #function that will return flig
         
     return chosentime, outputdata
 
+def giverefdata(choosedemo, chooseparam, plotting): #function that will return reference data based on chosen manoeuvre (choosedemo, string must match entry in "measdemotype") and chosen parameters (chooseparam, list of strings must match entries in "variables"), plots all data into one plot if plotting = True
+    #Entering flight data from XLSX
+    meastimes1 = ['00:20:10', '00:21:40', '00:23:40', '00:26:30', '00:28:45', '00:31:00'] #times of measurements for series 1
+    meastimes2 = ['00:36:00', '00:37:30', '00:39:35', '00:41:10', '00:43:05', '00:44:20', '00:45:25', '00:46:57', '00:48:52'] #times of measurement for series 2
+    meas2cgshift = [False, False, False, False, False, False, False, True, True] #for which measurements in series 2 was the cg shifted
+    meastimesdemo = ['01:00:35', '00:59:10', '00:53:57', '01:01:57', '01:02:47', '01:05:20', '01:07:00']#measurement times for the demonstration part
+    measdemotype = ['Short period', 'Aperiodic Roll', 'Phugoid', 'Dutch Roll', 'Dutch Roll with YD', 'Spiral', 'Parabola'] #which type of manoeuvre was flown
+
+    #Entering available parameters
+    variables = ['aoa', 'dte', 'fe', 'lhfmf', 'rhfmf', 'tfulbs', 'tfukg', 'deltaa', 'deltae', 'deltar', 'rollangle', 'pitchangle', 'rollrate', 'pitchrate', 'yawrate', 'tt', 'hp', 'm', 'tas'] #list of available variable names
+    param = ['alpha', 'delta_t_e', 'F_e', 'FFl', 'FFr', 'Wf', 'Wf', 'delta_a', 'delta_e', 'delta_r', 'phi', 'theta', 'p', 'q', 'r', 'T_0', 'h', 'M', 'V_TAS'] #list of corresponding symbols
+#    param = ['α', 'δte', 'Fe', 'FFl', 'FFr', 'Wf', 'Wf', 'δa', 'δe', 'δr', 'ϕ', 'θ', 'p', 'q', 'r', 'T0', 'h', 'M', 'Vtas'] #list of corresponding symbols
+    units = ['[deg]', '[deg]', '[N]', '[kg/s]', '[kg/s]', '[lbs]', '[kg]', '[deg]', '[deg]', '[deg]', '[deg]', '[deg]', '[deg/s]', '[deg/s]', '[deg/s]', '[K]', '[m]', '[-]', '[m/s]'] #list of corresponding units
+    
+    #Loading all external data
+    time = np.loadtxt('ReferenceData/time.dat', dtype = 'float')
+
+    aoa = np.loadtxt('ReferenceData/aoa.dat', dtype = 'float')
+    deltaa = np.loadtxt('ReferenceData/deltaa.dat', dtype = 'float')
+    deltae = np.loadtxt('ReferenceData/deltae.dat', dtype = 'float')
+    deltar = np.loadtxt('ReferenceData/deltar.dat', dtype = 'float')
+    dte = np.loadtxt('ReferenceData/dte.dat', dtype = 'float')
+    fe = np.loadtxt('ReferenceData/fe.dat', dtype = 'float')
+    hp = np.loadtxt('ReferenceData/hp.dat', dtype = 'float')
+    lhfmf = np.loadtxt('ReferenceData/lhfmf.dat', dtype = 'float')
+    mach = np.loadtxt('ReferenceData/mach.dat', dtype = 'float')
+    pitchangle = np.loadtxt('ReferenceData/pitchangle.dat', dtype = 'float')
+    pitchrate = np.loadtxt('ReferenceData/pitchrate.dat', dtype = 'float')
+    rhfmf = np.loadtxt('ReferenceData/rhfmf.dat', dtype = 'float')
+    rollangle = np.loadtxt('ReferenceData/rollangle.dat', dtype = 'float')
+    rollrate = np.loadtxt('ReferenceData/rollrate.dat', dtype = 'float')
+    tas = np.loadtxt('ReferenceData/tas.dat', dtype = 'float')
+    tfukg = np.loadtxt('ReferenceData/tfukg.dat', dtype = 'float')
+    tfulbs = np.loadtxt('ReferenceData/tfulbs.dat', dtype = 'float')
+    tt = np.loadtxt('ReferenceData/tt.dat', dtype = 'float')
+    yawrate = np.loadtxt('ReferenceData/yawrate.dat', dtype = 'float')
+
+    #Computing desired time
+    demoindex = measdemotype.index(choosedemo)
+    starttime = get_sec(meastimesdemo[demoindex])
+    
+    if choosedemo == 'Parabola':
+        endtime = starttime + 30
+    else:
+        endtime = get_sec(meastimesdemo[demoindex + 1]) #if parabola is chosen, there is no time recorded afterwards
+        
+    #Finding desired time
+    starttimeindex = np.where(time == starttime)
+    endtimeindex = np.where(time == endtime)
+
+    chosentime = time[starttimeindex[0][0]:endtimeindex[0][0]] #time array for chosen manoeuvre, 0 is necessary due to nature of output of np.where as an array
+    
+    #filtering chosen parameters by time span
+    outputdata = np.zeros((len(chosentime),len(chooseparam)))
+    paramstr = []
+    i = 0
+    for parameter in chooseparam:
+        data = eval(parameter)
+        
+        outputdata[:,i] = data[starttimeindex[0][0]:endtimeindex[0][0]] #0 is necessary due to nature of output of np.where as an array
+        
+        #building parameter legend labels from chooseparam
+        paramindex = variables.index(parameter)
+        paramstr.append(param[paramindex] + ' ' + units[paramindex]) #glueing the legend string together with nice label and units      
+
+        i += 1
+        
+    if plotting:
+        get_plots(paramstr, choosedemo, chosentime, outputdata)
+        
+    return chosentime, outputdata
+
 def compare_aperiodic(modeldata, flightdata): #plots comparison plots for aperiodic roll, needs data arrays from model and flight with columns for time, beta (only simulation, zeros/ones for flight data), phi, p, r, delta_r, delta_a
     plt.subplot(511) #beta
     plt.plot(modeldata[:,0], modeldata[:,1], color='black') #model data
