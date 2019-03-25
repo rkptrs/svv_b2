@@ -12,12 +12,12 @@ print("CX0 = ", CX0)
 print("CXq = ", CXq)
 print()
 
-
+Ak = np.linalg.eigvals(As)
 
 print("#################################")
 print()
 # Eigenvalues of the state space A matrix
-print("State space eigenvalues: ", np.linalg.eigvals(As))
+print("State space eigenvalues: ", Ak)
 print()
 print("#################################")
 print()
@@ -63,6 +63,8 @@ print ("Analytical Phugoid eigenvalues: ",L1,L2)
 print()
 print("#################################")
 
+
+########### -------- Percentage differences ----------------- ###########
 
 
 
