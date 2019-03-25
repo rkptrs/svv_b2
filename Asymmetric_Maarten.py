@@ -261,6 +261,8 @@ B_asym2 = np.matmul(-C1inv,C3)
 C_asym2 = np.identity(4)
 D_asym2 = np.zeros((4,2))
 
+Aa_aperiodic = A_asym2
+
 Unew = np.zeros((Trng,2))
 for i in range(Trng):
     Unew[i][1] = deltar[rng[0]+i]
@@ -338,6 +340,8 @@ B_asym2 = np.matmul(-C1inv,C3)
 C_asym2 = np.identity(4)
 D_asym2 = np.zeros((4,2))
 
+Aa_dutchroll = A_asym2
+
 Unew = np.zeros((Trng,2))
 for i in range(Trng):
     Unew[i][1] = deltar[rng[0]+i]
@@ -410,6 +414,8 @@ A_asym2 = np.matmul(-C1inv,C2)
 B_asym2 = np.matmul(-C1inv,C3)
 C_asym2 = np.identity(4)
 D_asym2 = np.zeros((4,2))
+
+Aa_spiral = A_asym2
 
 Unew = np.zeros((Trng,2))
 for i in range(Trng):
