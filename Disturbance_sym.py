@@ -109,10 +109,8 @@ sys = cmat.ss(As, Bs, Cs, Ds)
 
 # Generate Outputs
 T = np.arange(0, 150.1, 0.1)
-X0 = [0, alpha0, th0, 0]
-U = np.ones(len(T)) * -0.005
-#V0 = 91.271995
-#W0 = 5976.97
+X0 = [0, 0.1, th0, 0]
+U = np.ones(len(T)) * -0.00
 
 yout, T, xout = cmat.lsim(sys, U=U, T=T, X0=X0)
 
@@ -128,7 +126,7 @@ modeldata[:,1] = V
 modeldata[:,2] = alpha
 modeldata[:,3] = theta
 modeldata[:,4] = q
-modeldata[:,5] = U
+modeldata[:,5] = U * 180/np.pi
 
 plt.subplot(511) #V
 plt.plot(modeldata[:,0], modeldata[:,1], color='black') #model data
@@ -161,7 +159,7 @@ plt.grid()
 plt.subplot(515) #deltae
 plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
 plt.xlabel('Time [s]')
-plt.ylabel('δe [°]')
+plt.ylabel(r'$δ_e [°]$')
 plt.xlim([modeldata[0,0], modeldata[-1,0]])
 plt.grid()
     
