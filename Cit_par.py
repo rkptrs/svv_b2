@@ -6,21 +6,21 @@ from math import *
 # Stationary flight condition
 
 hp0    = 3000      # pressure altitude in the stationary flight condition [m]
-V0     = 60        # true airspeed in the stationary flight condition [m/sec]
+V0     = 80        # true airspeed in the stationary flight condition [m/sec]
 alpha0 = 0         # angle of attack in the stationary flight condition [rad]
 th0    = 0         # pitch angle in the stationary flight condition [rad]
 
 # Aircraft mass
-m      = 4000         # mass [kg]
+m      = 5500      # mass [kg]
 
 # aerodynamic properties
-e      = 0.842    # Oswald factor [ ]
-CD0    = 0.0221   # Zero lift drag coefficient [ ]
-CLa    = 4.555    # Slope of CL-alpha curve [ ]
+e      = 0.662    # Oswald factor [ ]
+CD0    = 0.0206   # Zero lift drag coefficient [ ]
+CLa    = 4.400    # Slope of CL-alpha curve [ ]
 
 # Longitudinal stability
-Cma    = -0.6394    # longitudinal stabilty [ ]
-Cmde   = -1.19877   # elevator effectiveness [ ]
+Cma    = -0.567    # longitudinal stabilty [ ]
+Cmde   = -1.182   # elevator effectiveness [ ]
 
 # Aircraft geometry
 
@@ -75,14 +75,14 @@ CD = CD0 + (CLa * alpha0) ** 2 / (pi * A * e) # Drag coefficient [ ]
 # Stabiblity derivatives
 
 CX0    = W * sin(th0) / (0.5 * rho * V0 ** 2 * S)
-CXu    = -0.02792
-CXa    = -0.47966
+CXu    = -0.05
+CXa    = -0.80
 CXadot = +0.08330
 CXq    = -0.28170
 CXde   = -0.03728
 
 CZ0    = -W * cos(th0) / (0.5 * rho * V0 ** 2 * S)
-CZu    = -0.37616
+CZu    = -0.59
 CZa    = -5.74340
 CZadot = -0.00350
 CZq    = -5.66290
