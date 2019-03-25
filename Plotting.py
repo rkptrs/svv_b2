@@ -182,7 +182,7 @@ def compare_aperiodic(modeldata, flightdata): #plots comparison plots for aperio
     
     plt.subplot(512) #phi
     plt.plot(modeldata[:,0], modeldata[:,2], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,1], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('ϕ [°]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -191,7 +191,7 @@ def compare_aperiodic(modeldata, flightdata): #plots comparison plots for aperio
     
     plt.subplot(513) #p
     plt.plot(modeldata[:,0], modeldata[:,3], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('p [°/s]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -200,7 +200,7 @@ def compare_aperiodic(modeldata, flightdata): #plots comparison plots for aperio
     
     plt.subplot(514) #r
     plt.plot(modeldata[:,0], modeldata[:,4], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,4], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('r [°/s]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -208,12 +208,12 @@ def compare_aperiodic(modeldata, flightdata): #plots comparison plots for aperio
     plt.grid()
     
     plt.subplot(515) #deltar, deltaa
-    plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
+    plt.plot(flightdata[:,0], flightdata[:,4], color='black') #model data
     plt.plot(flightdata[:,0], flightdata[:,5], color='orange') #flight data
     plt.xlabel('Time [s]')
-    plt.ylabel('δr [°], δa [°]')
+    plt.ylabel('Deflection [°]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
-    plt.legend(['Simulation', 'Flight Data'])
+    plt.legend([r'$δ_r [°]$', r'$δ_a [°]$'])
     plt.grid()
     
     plt.show()
@@ -231,16 +231,16 @@ def compare_dutchroll(modeldata, flightdata): #plots comparison plots for dutch 
     
     plt.subplot(512) #phi
     plt.plot(modeldata[:,0], modeldata[:,2], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,1], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('ϕ [°]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
-    plt.legend(['Simulation', 'Flight Data'], color='orange')
+    plt.legend(['Simulation', 'Flight Data'])
     plt.grid()
     
     plt.subplot(513) #p
     plt.plot(modeldata[:,0], modeldata[:,3], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('p [°/s]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -249,7 +249,7 @@ def compare_dutchroll(modeldata, flightdata): #plots comparison plots for dutch 
     
     plt.subplot(514) #r
     plt.plot(modeldata[:,0], modeldata[:,4], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,4], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('r [°/s]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -257,12 +257,12 @@ def compare_dutchroll(modeldata, flightdata): #plots comparison plots for dutch 
     plt.grid()
     
     plt.subplot(515) #deltar, deltaa
-    plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
+    plt.plot(flightdata[:,0], flightdata[:,4], color='black') #model data
     plt.plot(flightdata[:,0], flightdata[:,5], color='orange') #flight data
     plt.xlabel('Time [s]')
-    plt.ylabel('δr [°], δa [°]')
+    plt.ylabel('Deflection [°]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
-    plt.legend(['Simulation', 'Flight Data'])
+    plt.legend([r'$δ_r [°]$', r'$δ_a [°]$'])
     plt.grid()
     
     plt.show()
@@ -311,7 +311,7 @@ def compare_phugoid(modeldata, flightdata): #plots comparison plots for phugoid,
     plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
     plt.plot(flightdata[:,0], flightdata[:,5], color='orange') #flight data
     plt.xlabel('Time [s]')
-    plt.ylabel('δe [°]')
+    plt.ylabel(r'$δ_e [°]$')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
     plt.legend(['Simulation', 'Flight Data'])
     plt.grid()
@@ -361,7 +361,7 @@ def compare_shortperiod(modeldata, flightdata): #plots comparison plots for aper
     plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
     plt.plot(flightdata[:,0], flightdata[:,5], color='orange') #flight data
     plt.xlabel('Time [s]')
-    plt.ylabel('δe [°]')
+    plt.ylabel(r'$δ_e [°]$')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
     plt.legend(['Simulation', 'Flight Data'])
     plt.grid()
@@ -381,7 +381,7 @@ def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic
     
     plt.subplot(512) #phi
     plt.plot(modeldata[:,0], modeldata[:,2], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,1], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('ϕ [°]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -390,7 +390,7 @@ def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic
     
     plt.subplot(513) #p
     plt.plot(modeldata[:,0], modeldata[:,3], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('p [°/s]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -399,7 +399,7 @@ def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic
     
     plt.subplot(514) #r
     plt.plot(modeldata[:,0], modeldata[:,4], color='black') #model data
-    plt.plot(flightdata[:,0], flightdata[:,4], color='orange') #flight data
+    plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
     plt.xlabel('Time [s]')
     plt.ylabel('r [°/s]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
@@ -407,12 +407,12 @@ def compare_spiral(modeldata, flightdata): #plots comparison plots for aperiodic
     plt.grid()
     
     plt.subplot(515) #deltar, deltaa
-    plt.plot(modeldata[:,0], modeldata[:,5], color='black') #model data
+    plt.plot(flightdata[:,0], flightdata[:,4], color='black') #model data
     plt.plot(flightdata[:,0], flightdata[:,5], color='orange') #flight data
     plt.xlabel('Time [s]')
-    plt.ylabel('δr [°], δa [°]')
+    plt.ylabel('Deflection [°]')
     plt.xlim([modeldata[0,0], modeldata[-1,0]])
-    plt.legend(['Simulation', 'Flight Data'])
+    plt.legend([r'$δ_r [°]$', r'$δ_a [°]$'])
     plt.grid()
     
     plt.show()
