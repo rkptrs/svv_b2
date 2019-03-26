@@ -2,7 +2,8 @@ import control.matlab as cmat
 import control
 import numpy as np
 import matplotlib.pyplot as plt
-from Cit_para import *
+from Cit_par import *
+from Plotting import *
 
 #define initial paramaters
 
@@ -264,37 +265,89 @@ Unew = np.zeros((Trng,2))
 for i in range(Trng):
     Unew[i][1] = deltar[rng[0]+i]
     Unew[i][0] = deltaa[rng[0]+i]
+    
+    
+Ua = np.zeros((Trng,2))
+for i in range(10):
+    Ua[i][0] = 1.432394488
+    
+Ur = np.zeros((Trng,2))
+for i in range(10):
+    Ur[i][1] = 0.1/np.pi*180
+    
+U0 = np.zeros((Trng,2))
 
 sys2 = cmat.ss(A_asym2, B_asym2, C_asym2, D_asym2)
-response = cmat.lsim(sys2, T=T, U=-Unew, X0 = [0,rollangle[rng[0]],rollrate[rng[0]],yawrate[rng[0]]])
+#response = cmat.lsim(sys2, T=T, U=-Unew, X0 = [0,rollangle[rng[0]],rollrate[rng[0]],yawrate[rng[0]]])
+response = cmat.lsim(sys2, T=T, U=Ur, X0 = [0,0,0,0])
+#response = cmat.lsim(sys2, T=T, U=U0, X0 = [5.729577951,0,0,0])
+simdata = np.zeros((200,5))
+simdata[:,0] = T
+simdata[:,1] = np.transpose(response[0][0:,0])
+simdata[:,2] = np.transpose(response[0][0:,1])
+simdata[:,3] = np.transpose(response[0][0:,2])
+simdata[:,4] = np.transpose(response[0][0:,3])
 
-#plot rollangle
-f, (ax1,ax2,ax3, ax4) = plt.subplots(4)
-f.suptitle('Aperiodic roll motion', fontsize=16)
-ax1.plot(T,np.transpose(response[0][:,1]))
-ax1.plot(T,rollangle[rng[0]:rng[1]])
-ax1.set_ylabel(r'rollangle ($\phi$)')
-ax1.set_xlabel('Time (t)')
+realdata = np.zeros((200,7))
+realdata[:,0] = T
+realdata[:,1] = rollangle[rng[0]:rng[1]]
+realdata[:,2] = rollrate[rng[0]:rng[1]]
+realdata[:,3] = yawrate[rng[0]:rng[1]]
+realdata[:,4] = deltar[rng[0]:rng[1]]
+realdata[:,5] = deltaa[rng[0]:rng[1]]
 
+#compare_aperiodic(simdata,realdata)
 
-#plot rollrate
+x = [0,2.5,5,7.5,10,12.5,15,17.5,20]
+plt.subplot(511) #beta
+plt.plot(simdata[:,0], simdata[:,1], color='black') #model data
+#plt.xlabel('Time [s]')
+plt.ylabel('β [°]',fontsize=13)
+plt.xticks(x,' ')
+plt.xlim([simdata[0,0], simdata[-1,0]])
+#plt.legend(['Simulation'])
+plt.grid()
 
-ax2.plot(T,np.transpose(response[0][:,2]))
-ax2.plot(T,rollrate[rng[0]:rng[1]])
-ax2.set_ylabel('rollrate (p)')
-ax2.set_xlabel('Time (t)')
+plt.subplot(512) #phi
+plt.plot(simdata[:,0], simdata[:,2], color='black') #model data
+#plt.plot(flightdata[:,0], flightdata[:,1], color='orange') #flight data
+#plt.xlabel('Time [s]')
+plt.ylabel('ϕ [°]',fontsize=13)
+plt.xticks(x,' ')
+plt.xlim([simdata[0,0], simdata[-1,0]])
+#plt.legend(['Simulation'])
+plt.grid()
 
+plt.subplot(513) #p
+plt.plot(simdata[:,0], simdata[:,3], color='black') #model data
+#plt.plot(flightdata[:,0], flightdata[:,2], color='orange') #flight data
+#plt.xlabel('Time [s]')
+plt.ylabel('p [°/s]',fontsize=13)
+plt.xticks(x,' ')
+plt.xlim([simdata[0,0], simdata[-1,0]])
+#plt.legend(['Simulation'])
+plt.grid()
 
-#plot yawrate
+plt.subplot(514) #r
+plt.plot(simdata[:,0], simdata[:,4], color='black') #model data
+#plt.plot(flightdata[:,0], flightdata[:,3], color='orange') #flight data
+#plt.xlabel('Time [s]')
+plt.ylabel('r [°/s]',fontsize=13)
+plt.xticks(x,' ')
+plt.xlim([simdata[0,0], simdata[-1,0]])
+#plt.legend(['Simulation'])
+plt.grid()
 
-ax3.plot(T,np.transpose(response[0][:,3]))
-ax3.plot(T,yawrate[rng[0]:rng[1]])
-ax3.set_ylabel('yawrate (r)')
-ax3.set_xlabel('Time (t)')
+plt.subplot(515) #deltar, deltaa
+plt.plot(simdata[:,0], Ur[:,1], color='black') #model data
+plt.plot(simdata[:,0], Ur[:,0], color='orange') #flight data
+plt.xlabel('Time [s]',fontsize=13)
+plt.ylabel('Deflection [°]',fontsize=13)
+plt.xlim([simdata[0,0], simdata[-1,0]])
+plt.legend([r'$δ_r [°]$', r'$δ_a [°]$'])
+plt.grid()
 
-ax4.plot(T,np.transpose(response[0][:,0]))
-ax4.set_ylabel('sideslip (beta)')
-ax4.set_xlabel('Time (t)')
+plt.show()
 
 
 #plotting dutch roll
@@ -344,29 +397,47 @@ for i in range(Trng):
 sys2 = cmat.ss(A_asym2, B_asym2, C_asym2, D_asym2)
 response = cmat.lsim(sys2, T=T, U=-Unew, X0 = [0,rollangle[rng[0]],rollrate[rng[0]],yawrate[rng[0]]])
 
-#plot rollangle
-f, (ax1,ax2,ax3) = plt.subplots(3)
-f.suptitle('Dutch roll motion', fontsize=16)
-ax1.plot(T,np.transpose(response[0][:,1]))
-ax1.plot(T,rollangle[rng[0]:rng[1]])
-ax1.set_ylabel(r'rollangle ($\phi$)')
-ax1.set_xlabel('Time (t)')
 
+simdata = np.zeros((200,5))
+simdata[:,0] = T
+simdata[:,1] = np.transpose(response[0][0:,0])
+simdata[:,2] = np.transpose(response[0][0:,1])
+simdata[:,3] = np.transpose(response[0][0:,2])
+simdata[:,4] = np.transpose(response[0][0:,3])
 
-#plot rollrate
+realdata = np.zeros((200,7))
+realdata[:,0] = T
+realdata[:,1] = rollangle[rng[0]:rng[1]]
+realdata[:,2] = rollrate[rng[0]:rng[1]]
+realdata[:,3] = yawrate[rng[0]:rng[1]]
+realdata[:,4] = deltar[rng[0]:rng[1]]
+realdata[:,5] = deltaa[rng[0]:rng[1]]
 
-ax2.plot(T,np.transpose(response[0][:,2]))
-ax2.plot(T,rollrate[rng[0]:rng[1]])
-ax2.set_ylabel('rollrate (p)')
-ax2.set_xlabel('Time (t)')
+#compare_dutchroll(simdata,realdata)
 
-
-#plot yawrate
-
-ax3.plot(T,np.transpose(response[0][:,3]))
-ax3.plot(T,yawrate[rng[0]:rng[1]])
-ax3.set_ylabel('yawrate (r)')
-ax3.set_xlabel('Time (t)')
+##plot rollangle
+#f, (ax1,ax2,ax3) = plt.subplots(3)
+#f.suptitle('Dutch roll motion', fontsize=16)
+#ax1.plot(T,np.transpose(response[0][:,1]))
+#ax1.plot(T,rollangle[rng[0]:rng[1]])
+#ax1.set_ylabel(r'rollangle ($\phi$)')
+#ax1.set_xlabel('Time (t)')
+#
+#
+##plot rollrate
+#
+#ax2.plot(T,np.transpose(response[0][:,2]))
+#ax2.plot(T,rollrate[rng[0]:rng[1]])
+#ax2.set_ylabel('rollrate (p)')
+#ax2.set_xlabel('Time (t)')
+#
+#
+##plot yawrate
+#
+#ax3.plot(T,np.transpose(response[0][:,3]))
+#ax3.plot(T,yawrate[rng[0]:rng[1]])
+#ax3.set_ylabel('yawrate (r)')
+#ax3.set_xlabel('Time (t)')
 
 
 #plotting spiral
@@ -416,26 +487,46 @@ for i in range(Trng):
 sys2 = cmat.ss(A_asym2, B_asym2, C_asym2, D_asym2)
 response = cmat.lsim(sys2, T=T, U=-Unew, X0 = [0,rollangle[rng[0]],rollrate[rng[0]],yawrate[rng[0]]])
 
-#plot rollangle
-f, (ax1,ax2,ax3) = plt.subplots(3)
-f.suptitle('Spiral motion', fontsize=16)
-ax1.plot(T,np.transpose(response[0][:,1]))
-ax1.plot(T,rollangle[rng[0]:rng[1]])
-ax1.set_ylabel(r'rollangle ($\phi$)')
-ax1.set_xlabel('Time (t)')
+
+simdata = np.zeros((1300,5))
+simdata[:,0] = T
+simdata[:,1] = np.transpose(response[0][0:,0])
+simdata[:,2] = np.transpose(response[0][0:,1])
+simdata[:,3] = np.transpose(response[0][0:,2])
+simdata[:,4] = np.transpose(response[0][0:,3])
+
+realdata = np.zeros((1300,7))
+realdata[:,0] = T
+realdata[:,1] = rollangle[rng[0]:rng[1]]
+realdata[:,2] = rollrate[rng[0]:rng[1]]
+realdata[:,3] = yawrate[rng[0]:rng[1]]
+realdata[:,4] = deltar[rng[0]:rng[1]]
+realdata[:,5] = deltaa[rng[0]:rng[1]]
+
+#compare_spiral(simdata,realdata)
 
 
-#plot rollrate
 
-ax2.plot(T,np.transpose(response[0][:,2]))
-ax2.plot(T,rollrate[rng[0]:rng[1]])
-ax2.set_ylabel('rollrate (p)')
-ax2.set_xlabel('Time (t)')
-
-
-#plot yawrate
-
-ax3.plot(T,np.transpose(response[0][:,3]))
-ax3.plot(T,yawrate[rng[0]:rng[1]])
-ax3.set_ylabel('yawrate (r)')
-ax3.set_xlabel('Time (t)')
+##plot rollangle
+#f, (ax1,ax2,ax3) = plt.subplots(3)
+#f.suptitle('Spiral motion', fontsize=16)
+#ax1.plot(T,np.transpose(response[0][:,1]))
+#ax1.plot(T,rollangle[rng[0]:rng[1]])
+#ax1.set_ylabel(r'rollangle ($\phi$)')
+#ax1.set_xlabel('Time (t)')
+#
+#
+##plot rollrate
+#
+#ax2.plot(T,np.transpose(response[0][:,2]))
+#ax2.plot(T,rollrate[rng[0]:rng[1]])
+#ax2.set_ylabel('rollrate (p)')
+#ax2.set_xlabel('Time (t)')
+#
+#
+##plot yawrate
+#
+#ax3.plot(T,np.transpose(response[0][:,3]))
+#ax3.plot(T,yawrate[rng[0]:rng[1]])
+#ax3.set_ylabel('yawrate (r)')
+#ax3.set_xlabel('Time (t)')
